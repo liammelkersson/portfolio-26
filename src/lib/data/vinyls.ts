@@ -107,5 +107,29 @@ export const vinyls: Vinyl[] = [
 		artist: 'Frank Ocean',
 		coverUrl: '/vinyls/channel-orange.webp',
 		spotifyUrl: 'https://open.spotify.com/album/392p3shh2jkxUxY2VHvlH8'
+	},
+	{
+		title: 'UTOPIA',
+		artist: 'Travis Scott',
+		coverUrl: '/vinyls/utopia.webp',
+		spotifyUrl: 'https://open.spotify.com/album/18NOKLkZETa4sWwLMIm0UZ'
+	},
+	{
+		title: '14 minutes',
+		artist: 'Dominic Fike',
+		coverUrl: '/vinyls/14-minutes.webp',
+		spotifyUrl: 'https://open.spotify.com/album/2qwv7hNjSGfLarHY2adeq9'
+	},
+	{
+		title: 'Either/Or',
+		artist: 'Elliott Smith',
+		coverUrl: '/vinyls/either-or.webp',
+		spotifyUrl: 'https://open.spotify.com/album/5hryhrT7wEdLnZCbJX9F6L'
+	},
+	{
+		title: 'CALL ME IF YOU GET LOST: The Estate Sale',
+		artist: 'Tyler, The Creator',
+		coverUrl: '/vinyls/call-me-if-you-get-lost.webp',
+		spotifyUrl: 'https://open.spotify.com/album/1GG6U2SSJPHO6XsFiBzxYv'
 	}
 ];
