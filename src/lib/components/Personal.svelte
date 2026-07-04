@@ -95,11 +95,6 @@
 				'<g stroke-width="2"><circle cx="14.8" cy="4.2" r="1.9" fill="currentColor" stroke="none" /><path d="M13.8 7.5 11.8 12.5" /><path d="M13.8 7.5l3.4 1.7 2.3-.6" /><path d="M13.8 7.5 10 8.7 8.2 11" /><path d="M11.8 12.5l3 2.5-.7 4.5" /><path d="M11.8 12.5l-3.3 2.8-3.3.5" /></g>'
 		},
 		{
-			label: 'Bonsai',
-			iconPath:
-				'<path d="M5 17.5h14" /><path d="M7.5 17.5h9l-.7 2.2a1.4 1.4 0 0 1-1.3 1H9.5a1.4 1.4 0 0 1-1.3-1z" /><path d="M12 17.5c0-1.8.3-3.2-1.8-4.7" /><circle cx="8.8" cy="10" r="3" /><circle cx="14.8" cy="7.8" r="2.6" />'
-		},
-		{
 			label: 'Concerts',
 			iconPath:
 				'<path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v1.5a2.5 2.5 0 0 0 0 5V16a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1.5a2.5 2.5 0 0 0 0-5z" /><path d="M14.5 6.3v1.9M14.5 11v2M14.5 15.8v1.9" />'
