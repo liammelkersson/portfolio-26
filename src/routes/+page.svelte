@@ -2,7 +2,7 @@
 	import Header from '$lib/components/Header.svelte';
 	import Hero from '$lib/components/Hero.svelte';
 	import ProjectGrid from '$lib/components/ProjectGrid.svelte';
-	import Contact from '$lib/components/Contact.svelte';
+	import Links from '$lib/components/Links.svelte';
 	import Personal from '$lib/components/Personal.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 
@@ -61,7 +61,7 @@
 <main>
 	<Hero />
 	<ProjectGrid />
-	<Contact />
 	<Personal />
+	<Links />
 </main>
 <Footer />

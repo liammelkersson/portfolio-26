@@ -48,8 +48,11 @@
 <section class="mx-auto max-w-3xl px-6 pt-20 pb-24">
 	<div {@attach reveal()} class="flex items-center gap-5">
 		<img
-			src="/portrait.jpg"
+			src="/portrait-160.webp"
 			alt="Liam Melkersson"
+			width="160"
+			height="160"
+			fetchpriority="high"
 			class="h-20 w-20 shrink-0 rounded-full object-cover"
 		/>
 		<div>

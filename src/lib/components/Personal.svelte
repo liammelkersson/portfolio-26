@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import LinkList from '$lib/components/LinkList.svelte';
 	import VinylRack from '$lib/components/VinylRack.svelte';
 	import { reveal } from '$lib/attachments/reveal';
 
@@ -111,48 +110,6 @@
 		}
 	];
 
-	const links = [
-		{
-			label: 'Instagram',
-			href: 'https://www.instagram.com/liammelkersson',
-			icon: '/icons/instagram.svg'
-		},
-		{
-			label: 'Pinterest',
-			href: 'https://www.pinterest.com/liammelkersson',
-			icon: '/icons/pinterest.svg'
-		},
-		{
-			label: 'Spotify',
-			href: 'https://open.spotify.com/user/liammelkersson',
-			icon: '/icons/spotify.svg'
-		},
-		{
-			label: 'IMDb',
-			href: 'https://www.imdb.com/user/p.m5offwgsw6skfk2i24rwgspupi',
-			icon: '/icons/imdb.svg'
-		},
-		{
-			label: 'MyAnimeList',
-			href: 'https://myanimelist.net/animelist/altgirlsimp?status=7',
-			icon: '/icons/myanimelist.svg'
-		},
-		{
-			label: 'Discogs',
-			href: 'https://www.discogs.com/user/altgirlsimp',
-			icon: '/icons/discogs.svg'
-		},
-		{
-			label: 'Strava',
-			href: 'https://www.strava.com/athletes/40641208',
-			icon: '/icons/strava.svg'
-		},
-		{
-			label: 'Setlist.fm',
-			href: 'https://www.setlist.fm/user/liammelkersson',
-			icon: '/icons/setlist.png'
-		}
-	];
 </script>
 
 <section id="personal" class="mx-auto max-w-3xl px-6 pb-24">
@@ -188,7 +145,7 @@
 	</div>
 	<div
 		{@attach reveal(170)}
-		class="mb-10 flex items-center gap-3 text-sm text-neutral-500 dark:text-neutral-400"
+		class="flex items-center gap-3 text-sm text-neutral-500 dark:text-neutral-400"
 	>
 		<button
 			type="button"
@@ -237,9 +194,6 @@
 				</p>
 			{/key}
 		</div>
-	</div>
-	<div {@attach reveal(200)}>
-		<LinkList {links} />
 	</div>
 </section>
 
