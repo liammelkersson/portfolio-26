@@ -1,0 +1,65 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@font-face {
+	font-family: 'Neue Haas Display';
+	src:
+		url('/fonts/NeueHaasDisplayRoman.woff2') format('woff2'),
+		url('/fonts/NeueHaasDisplayRoman.ttf') format('truetype');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Neue Haas Display';
+	src:
+		url('/fonts/NeueHaasDisplayMedium.woff2') format('woff2'),
+		url('/fonts/NeueHaasDisplayMedium.ttf') format('truetype');
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Neue Haas Display';
+	src:
+		url('/fonts/NeueHaasDisplayBold.woff2') format('woff2'),
+		url('/fonts/NeueHaasDisplayBold.ttf') format('truetype');
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@theme {
+	--font-sans: 'Neue Haas Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+}
+
+.reveal-hidden {
+	opacity: 0;
+	transform: translateY(16px);
+	transition:
+		opacity 0.6s ease,
+		transform 0.6s ease;
+}
+
+.reveal-visible {
+	opacity: 1;
+	transform: none;
+}
+
+body {
+	background: #fff;
+	transition: background-color 0.3s ease;
+}
+
+html.dark body {
+	background: #141414;
+}
