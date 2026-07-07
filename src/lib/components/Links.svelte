@@ -74,5 +74,21 @@
 			Links
 		</h2>
 		<LinkList {links} />
+		<p class="mt-4 text-xs opacity-40">
+			causes I care about:
+			<a
+				href="https://djurensratt.se/"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="underline opacity-100 transition-opacity hover:opacity-70">Djurens Rätt</a
+			>
+			&
+			<a
+				href="https://www.hjarnfonden.se/"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="underline opacity-100 transition-opacity hover:opacity-70">Hjärnfonden</a
+			>
+		</p>
 	</div>
 </section>
