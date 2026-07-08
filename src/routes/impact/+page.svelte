@@ -54,7 +54,7 @@
 	<img
 		src="/impact/hillside.webp"
 		alt=""
-		class="h-full w-full scale-110 object-cover opacity-30 blur-3xl dark:opacity-20"
+		class="h-full w-full scale-110 object-cover opacity-30 blur-lg dark:opacity-20 dark:blur-3xl"
 	/>
 </div>
 
