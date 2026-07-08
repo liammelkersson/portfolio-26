@@ -119,7 +119,7 @@
 							href="https://ecologi.com"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="underline underline-offset-2"
+							class="underline underline-offset-2 transition-colors hover:text-[#34C759]"
 						>
 							Ecologi
 						</a>. Full report on
@@ -127,7 +127,7 @@
 							href="https://www.websitecarbon.com/website/liammelkersson-xyz/"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="underline underline-offset-2"
+							class="underline underline-offset-2 transition-colors hover:text-[#34C759]"
 						>
 							Website Carbon
 						</a>.
