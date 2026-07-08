@@ -25,15 +25,18 @@ describe('fetchCarbonStats', () => {
 		vi.unstubAllGlobals();
 	});
 
-	it('fetches and caches the result on a cold cache', async () => {
+	it('fetches by real bytes and caches the result on a cold cache', async () => {
 		vi.mocked(fetch).mockResolvedValue(
-			new Response(JSON.stringify({ c: 1.39, p: 17 }), { status: 200 })
+			new Response(JSON.stringify({ gco2e: 1.39, cleanerThan: 0.17 }), { status: 200 })
 		);
 
-		const result = await fetchCarbonStats();
+		const result = await fetchCarbonStats(500000);
 
 		expect(result).toEqual({ c: 1.39, p: 17 });
-		expect(fetch).toHaveBeenCalledTimes(1);
+		expect(fetch).toHaveBeenCalledWith(
+			'https://api.websitecarbon.com/data?bytes=500000&green=0',
+			expect.anything()
+		);
 		expect(JSON.parse(localStorage.getItem('carbon-badge')!).v).toEqual({ c: 1.39, p: 17 });
 	});
 
@@ -43,7 +46,7 @@ describe('fetchCarbonStats', () => {
 			JSON.stringify({ t: Date.now(), v: { c: 2.5, p: 30 } })
 		);
 
-		const result = await fetchCarbonStats();
+		const result = await fetchCarbonStats(500000);
 
 		expect(result).toEqual({ c: 2.5, p: 30 });
 		expect(fetch).not.toHaveBeenCalled();
@@ -52,6 +55,6 @@ describe('fetchCarbonStats', () => {
 	it('throws when the response shape is unexpected', async () => {
 		vi.mocked(fetch).mockResolvedValue(new Response(JSON.stringify({}), { status: 200 }));
 
-		await expect(fetchCarbonStats()).rejects.toThrow('unexpected websitecarbon response');
+		await expect(fetchCarbonStats(500000)).rejects.toThrow('unexpected websitecarbon response');
 	});
 });

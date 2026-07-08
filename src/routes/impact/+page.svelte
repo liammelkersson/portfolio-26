@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { env } from '$env/dynamic/public';
 	import { fetchCarbonStats } from '$lib/impact/websiteCarbon';
+	import { getCachedPageBytes } from '$lib/impact/pageWeight';
 	import { getCounterCount } from '$lib/impact/counterApi';
 	import { fetchTreesPlanted } from '$lib/impact/ecologiReporting';
 	import { VISITS_COUNTER, GRAMS_PER_TREE } from '$lib/impact/config';
@@ -25,9 +26,14 @@
 	);
 
 	$effect(() => {
+		const bytes = getCachedPageBytes();
+		if (bytes === null) {
+			failed = true;
+			return;
+		}
 		const controller = new AbortController();
 		Promise.all([
-			fetchCarbonStats(controller.signal),
+			fetchCarbonStats(bytes, controller.signal),
 			getCounterCount(VISITS_COUNTER),
 			env.PUBLIC_ECOLOGI_USERNAME
 				? fetchTreesPlanted(env.PUBLIC_ECOLOGI_USERNAME, controller.signal)

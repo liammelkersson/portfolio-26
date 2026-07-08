@@ -1,12 +1,18 @@
 <script lang="ts">
 	import { fetchCarbonStats, type CarbonStats } from '$lib/impact/websiteCarbon';
+	import { getCachedPageBytes } from '$lib/impact/pageWeight';
 
 	let result = $state<CarbonStats | null>(null);
 	let failed = $state(false);
 
 	$effect(() => {
+		const bytes = getCachedPageBytes();
+		if (bytes === null) {
+			failed = true;
+			return;
+		}
 		const controller = new AbortController();
-		fetchCarbonStats(controller.signal)
+		fetchCarbonStats(bytes, controller.signal)
 			.then((data) => {
 				result = data;
 			})

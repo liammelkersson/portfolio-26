@@ -3,11 +3,15 @@
 	import { browser } from '$app/environment';
 	import AsciiBackground from '$lib/components/AsciiBackground.svelte';
 	import { trackVisit } from '$lib/impact/visitTracking';
+	import { recordHomepageWeight } from '$lib/impact/pageWeight';
 
 	let { children } = $props();
 
 	$effect(() => {
-		if (browser) trackVisit();
+		if (browser) {
+			trackVisit();
+			recordHomepageWeight();
+		}
 	});
 </script>
 
