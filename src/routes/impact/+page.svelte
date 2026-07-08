@@ -92,8 +92,7 @@
 		</div>
 
 		<p class="mt-12 text-sm opacity-50">
-			Estimated from live per-view carbon data and total visits since launch. Offsets purchased
-			automatically through
+			Trees planted through
 			<a
 				href="https://ecologi.com"
 				target="_blank"
