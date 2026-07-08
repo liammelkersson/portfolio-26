@@ -58,59 +58,61 @@
 	/>
 </div>
 
-<Header />
+<div class="flex min-h-screen flex-col">
+	<Header />
 
-<div class="mx-auto max-w-3xl px-6 py-12">
-	<a href="/" class="text-base opacity-60 transition-opacity hover:opacity-100">
-		<span style="font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif">←</span> back
-	</a>
+	<div class="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
+		<a href="/" class="text-base opacity-60 transition-opacity hover:opacity-100">
+			<span style="font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif">←</span> back
+		</a>
 
-	{#if failed}
-		<p class="mt-6 text-base opacity-60">Couldn't load impact data right now.</p>
-	{:else if gramsPerView === null}
-		<p class="mt-6 text-base opacity-60">Measuring…</p>
-	{:else}
-		<div class="mt-12 grid gap-12 sm:grid-cols-2">
-			<div>
-				<p class="text-base opacity-60">This website consumes</p>
-				<p class="mt-2 text-7xl font-semibold"><CountUp value={gramsPerView ?? 0} decimals={2} /></p>
-				<p class="mt-2 text-base opacity-60">grams of CO₂ per view</p>
+		{#if failed}
+			<p class="mt-6 text-base opacity-60">Couldn't load impact data right now.</p>
+		{:else if gramsPerView === null}
+			<p class="mt-6 text-base opacity-60">Measuring…</p>
+		{:else}
+			<div class="mt-12 grid gap-12 sm:grid-cols-2">
+				<div>
+					<p class="text-base opacity-60">This website consumes</p>
+					<p class="mt-2 text-7xl font-semibold"><CountUp value={gramsPerView ?? 0} decimals={2} /></p>
+					<p class="mt-2 text-base opacity-60">grams of CO₂ per view</p>
+				</div>
+				<div>
+					<p class="text-base opacity-60">Since this website's first publish</p>
+					<p class="mt-2 text-7xl font-semibold"><CountUp value={treesPurchased ?? 0} /></p>
+					<p class="mt-2 text-base opacity-60">trees have been planted to offset CO₂ use</p>
+					<p class="mt-4 text-sm opacity-50">
+						Trees planted through
+						<a
+							href="https://ecologi.com"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="underline underline-offset-2"
+						>
+							Ecologi
+						</a>. Full report on
+						<a
+							href="https://www.websitecarbon.com/website/liammelkersson-xyz/"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="underline underline-offset-2"
+						>
+							Website Carbon
+						</a>.
+					</p>
+				</div>
 			</div>
-			<div>
-				<p class="text-base opacity-60">Since this website's first publish</p>
-				<p class="mt-2 text-7xl font-semibold"><CountUp value={treesPurchased ?? 0} /></p>
-				<p class="mt-2 text-base opacity-60">trees have been planted to offset CO₂ use</p>
-				<p class="mt-4 text-sm opacity-50">
-					Trees planted through
-					<a
-						href="https://ecologi.com"
-						target="_blank"
-						rel="noopener noreferrer"
-						class="underline underline-offset-2"
-					>
-						Ecologi
-					</a>. Full report on
-					<a
-						href="https://www.websitecarbon.com/website/liammelkersson-xyz/"
-						target="_blank"
-						rel="noopener noreferrer"
-						class="underline underline-offset-2"
-					>
-						Website Carbon
-					</a>.
-				</p>
+
+			<div class="mt-12">
+				<p class="text-base opacity-60">Total CO₂ emitted across {visits} visits</p>
+				<p class="mt-2 text-5xl font-semibold"><CountUp value={totalKg ?? 0} decimals={2} />kg</p>
+				{#if treesStillOwed !== null && treesStillOwed > 0}
+					<p class="mt-1 text-base opacity-60">{treesStillOwed} tree(s) owed, queued for the next offset run</p>
+				{/if}
 			</div>
-		</div>
 
-		<div class="mt-12">
-			<p class="text-base opacity-60">Total CO₂ emitted across {visits} visits</p>
-			<p class="mt-2 text-5xl font-semibold"><CountUp value={totalKg ?? 0} decimals={2} />kg</p>
-			{#if treesStillOwed !== null && treesStillOwed > 0}
-				<p class="mt-1 text-base opacity-60">{treesStillOwed} tree(s) owed, queued for the next offset run</p>
-			{/if}
-		</div>
-
-		<div id="wcb" class="carbonbadge mt-12"></div>
-	{/if}
+			<div id="wcb" class="carbonbadge mt-12"></div>
+		{/if}
+	</div>
+	<Footer showCarbonBadge={false} />
 </div>
-<Footer showCarbonBadge={false} />
