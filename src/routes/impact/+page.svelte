@@ -23,9 +23,6 @@
 			? treesOwed(totalGrams, treesPurchased, GRAMS_PER_TREE)
 			: null
 	);
-	const progressToNextTree = $derived(
-		totalGrams !== null ? (totalGrams % GRAMS_PER_TREE) / GRAMS_PER_TREE : null
-	);
 
 	$effect(() => {
 		const controller = new AbortController();
@@ -76,6 +73,25 @@
 				<p class="text-base opacity-60">Since this website's first publish</p>
 				<p class="mt-2 text-7xl font-semibold"><CountUp value={treesPurchased ?? 0} /></p>
 				<p class="mt-2 text-base opacity-60">trees have been planted to offset CO₂ use</p>
+				<p class="mt-4 text-sm opacity-50">
+					Trees planted through
+					<a
+						href="https://ecologi.com"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="underline underline-offset-2"
+					>
+						Ecologi
+					</a>. Full report on
+					<a
+						href="https://www.websitecarbon.com/website/liammelkersson-xyz/"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="underline underline-offset-2"
+					>
+						Website Carbon
+					</a>.
+				</p>
 			</div>
 		</div>
 
@@ -87,37 +103,7 @@
 			{/if}
 		</div>
 
-		<div class="mt-8">
-			<p class="text-base opacity-60">CO₂ pending next automatic offset</p>
-			<div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-800">
-				<div
-					class="h-2 rounded-full"
-					style="width: {(progressToNextTree ?? 0) * 100}%; background-color: #34C759"
-				></div>
-			</div>
-		</div>
-
-		<p class="mt-12 text-sm opacity-50">
-			Trees planted through
-			<a
-				href="https://ecologi.com"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="underline underline-offset-2"
-			>
-				Ecologi
-			</a>. Full report on
-			<a
-				href="https://www.websitecarbon.com/website/liammelkersson-xyz/"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="underline underline-offset-2"
-			>
-				Website Carbon
-			</a>.
-		</p>
-
-		<div id="wcb" class="carbonbadge mt-6"></div>
+		<div id="wcb" class="carbonbadge mt-12"></div>
 	{/if}
 </div>
 <Footer showCarbonBadge={false} />
