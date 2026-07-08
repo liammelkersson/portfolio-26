@@ -12,7 +12,7 @@
 	let gramsPerView = $state<number | null>(null);
 	let visits = $state<number | null>(null);
 	let treesPurchased = $state<number | null>(null);
-	let failed = $state(false);
+	let loaded = $state(false);
 
 	const totalGrams = $derived(
 		gramsPerView !== null && visits !== null ? gramsPerView * visits : null
@@ -26,21 +26,18 @@
 
 	$effect(() => {
 		const controller = new AbortController();
-		Promise.all([
+		Promise.allSettled([
 			fetchCarbonStats(controller.signal),
 			getCounterCount(VISITS_COUNTER),
 			env.PUBLIC_ECOLOGI_USERNAME
 				? fetchTreesPlanted(env.PUBLIC_ECOLOGI_USERNAME, controller.signal)
 				: Promise.resolve(0)
-		])
-			.then(([carbon, visitCount, treeCount]) => {
-				gramsPerView = carbon.c;
-				visits = visitCount;
-				treesPurchased = treeCount;
-			})
-			.catch(() => {
-				failed = true;
-			});
+		]).then(([carbonResult, visitsResult, treesResult]) => {
+			if (carbonResult.status === 'fulfilled') gramsPerView = carbonResult.value.c;
+			if (visitsResult.status === 'fulfilled') visits = visitsResult.value;
+			if (treesResult.status === 'fulfilled') treesPurchased = treesResult.value;
+			loaded = true;
+		});
 		return () => controller.abort();
 	});
 </script>
@@ -91,20 +88,30 @@
 			<span style="font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif">←</span> back
 		</a>
 
-		{#if failed}
-			<p class="mt-6 text-base opacity-60">Couldn't load impact data right now.</p>
-		{:else if gramsPerView === null}
+		{#if !loaded}
 			<p class="mt-6 text-base opacity-60">Measuring…</p>
 		{:else}
 			<div class="mt-12 grid gap-12 sm:grid-cols-2">
 				<div>
 					<p class="text-base opacity-60">This website consumes</p>
-					<p class="mt-2 text-7xl font-semibold"><CountUp value={gramsPerView ?? 0} decimals={2} /></p>
+					<p class="mt-2 text-7xl font-semibold">
+						{#if gramsPerView !== null}
+							<CountUp value={gramsPerView} decimals={2} />
+						{:else}
+							—
+						{/if}
+					</p>
 					<p class="mt-2 text-base opacity-60">grams of CO₂ per view</p>
 				</div>
 				<div>
 					<p class="text-base opacity-60">Since this website's first publish</p>
-					<p class="mt-2 text-7xl font-semibold"><CountUp value={treesPurchased ?? 0} /></p>
+					<p class="mt-2 text-7xl font-semibold">
+						{#if treesPurchased !== null}
+							<CountUp value={treesPurchased} />
+						{:else}
+							—
+						{/if}
+					</p>
 					<p class="mt-2 text-base opacity-60">trees have been planted to offset CO₂ use</p>
 					<p class="mt-4 text-sm opacity-50">
 						Trees planted through
@@ -129,8 +136,16 @@
 			</div>
 
 			<div class="mt-12">
-				<p class="text-base opacity-60">Total CO₂ emitted across {visits} visits</p>
-				<p class="mt-2 text-5xl font-semibold"><CountUp value={totalKg ?? 0} decimals={2} />kg</p>
+				<p class="text-base opacity-60">
+					Total CO₂ emitted across {visits !== null ? visits : '—'} visits
+				</p>
+				<p class="mt-2 text-5xl font-semibold">
+					{#if totalKg !== null}
+						<CountUp value={totalKg} decimals={2} />kg
+					{:else}
+						—
+					{/if}
+				</p>
 				{#if treesStillOwed !== null && treesStillOwed > 0}
 					<p class="mt-1 text-base opacity-60">{treesStillOwed} tree(s) owed, queued for the next offset run</p>
 				{/if}
