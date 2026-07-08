@@ -12,7 +12,6 @@
 	let gramsPerView = $state<number | null>(null);
 	let visits = $state<number | null>(null);
 	let treesPurchased = $state<number | null>(null);
-	let treesPending = $state<number | null>(null);
 	let loaded = $state(false);
 
 	const totalGrams = $derived(
@@ -37,8 +36,7 @@
 			if (carbonResult.status === 'fulfilled') gramsPerView = carbonResult.value.c;
 			if (visitsResult.status === 'fulfilled') visits = visitsResult.value;
 			if (treesResult.status === 'fulfilled') {
-				treesPurchased = treesResult.value.total;
-				treesPending = treesResult.value.pending;
+				treesPurchased = treesResult.value.total + treesResult.value.pending;
 			}
 			loaded = true;
 		});
@@ -117,9 +115,6 @@
 						{/if}
 					</p>
 					<p class="mt-2 text-base opacity-60">trees have been planted to offset CO₂ use</p>
-					{#if treesPending !== null && treesPending > 0}
-						<p class="mt-1 text-sm opacity-50">{treesPending} tree(s) purchased, pending planting</p>
-					{/if}
 					<p class="mt-4 text-sm opacity-50">
 						Trees planted through
 						<a

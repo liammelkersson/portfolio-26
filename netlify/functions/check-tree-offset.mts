@@ -62,7 +62,7 @@ export default async () => {
 			fetchTreesPlanted(username),
 			readGramsPerView(store)
 		]);
-		const treesPurchased = treesStatus.total;
+		const treesPurchased = treesStatus.total + treesStatus.pending;
 
 		if (gramsPerView === null) {
 			console.log('check-tree-offset: no carbon stats reported yet, skipping run');
@@ -71,7 +71,7 @@ export default async () => {
 
 		const owed = treesOwed(visits * gramsPerView, treesPurchased, GRAMS_PER_TREE);
 		if (owed < 1) {
-			console.log(`check-tree-offset: no trees owed yet (${visits} visits, ${treesPurchased} already planted)`);
+			console.log(`check-tree-offset: no trees owed yet (${visits} visits, ${treesPurchased} already purchased)`);
 			return new Response('no trees owed', { status: 200 });
 		}
 
