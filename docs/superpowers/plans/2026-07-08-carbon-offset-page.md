@@ -4,7 +4,7 @@
 
 **Goal:** Add a `/impact` page showing the site's live per-view carbon footprint, total visits, and cumulative CO2 since launch, backed by a Netlify Scheduled Function that automatically buys offset trees via Ecologi once enough CO2 has accumulated.
 
-**Architecture:** Two public `counterapi.dev` counters (`carbon-visits`, `trees-purchased`) track state with no auth needed. The client increments/reads them for display. A Netlify Scheduled Function (cron, every 6h) independently reads the same counters, computes trees owed, and — gated by a monthly cap stored in Netlify Blobs — purchases a tree via Ecologi's API using a server-only env var key. The two paths never touch each other directly, so concurrent page visitors can never race a purchase.
+**Architecture:** A public `counterapi.dev` counter (`carbon-visits`) tracks visit count with no auth needed. The client increments/reads it for display. Trees-planted count is read directly from Ecologi's own public Reporting API (`GET /users/{username}/trees`, no auth) — ground truth, not a self-maintained proxy counter, so it can never drift out of sync. A Netlify Scheduled Function (cron, every 6h) independently reads the visit counter + Ecologi's reporting count, computes trees owed, and — gated by a monthly cap stored in Netlify Blobs — purchases a tree via Ecologi's Impact API using a server-only env var key. The display path and purchase path never touch each other directly, so concurrent page visitors can never race a purchase.
 
 **Tech Stack:** SvelteKit 5 (runes), TypeScript, Vitest (new — for pure-function unit tests), Netlify Functions v2 (`@netlify/functions`), Netlify Blobs (`@netlify/blobs`).
 
@@ -14,11 +14,13 @@
 - Monthly purchase cap: exactly 1 purchase per calendar month, regardless of trees owed
 - `DRY_RUN` env var defaults to `true` (anything other than the literal string `'false'` counts as dry-run) — must stay dormant until the user has an Ecologi account/key and confirms dry-run log output
 - Ecologi API key (`ECOLOGI_API_KEY`) lives only in Netlify's env var store, read server-side, never bundled into client code
-- counterapi.dev namespace: `liammelkersson-xyz`; counters: `carbon-visits`, `trees-purchased` (no auth, public GET/`/up` endpoints, confirmed CORS-open)
-- Ecologi purchase endpoint: `POST https://public.ecologi.com/impact/trees`, `Authorization: Bearer <key>`, JSON body `{ number, name, "Idempotency-Key" }`
+- Ecologi public username (`PUBLIC_ECOLOGI_USERNAME`) is **not secret** — build-time public env var (SvelteKit `PUBLIC_` prefix), used both client-side (page display) and server-side (offset function)
+- counterapi.dev namespace: `liammelkersson-xyz`; counter: `carbon-visits` (no auth, public GET/`/up` endpoints, confirmed CORS-open)
+- Ecologi Reporting API: `GET https://public.ecologi.com/users/{username}/trees` → `{ total: number, pending: number }`, no auth, confirmed CORS-open (`access-control-allow-origin: *`)
+- Ecologi Impact API purchase endpoint: `POST https://public.ecologi.com/impact/trees`, header `Authorization: Bearer <key>`, header `Idempotency-Key: <key>` (a header, not a body field — confirmed against https://docs.ecologi.com/), JSON body `{ number, name }`
 - Scheduled function cron: `0 */6 * * *` (every 6 hours)
 - Visit counter increments once per browser session (sessionStorage-guarded), from the root layout so it reflects total site traffic, not just `/impact` visits
-- Never change structure and behavior in the same commit — the CarbonBadge refactor (Task 5) is behavior-preserving; the CarbonBadge link change (Task 8) is separate
+- Never change structure and behavior in the same commit — the CarbonBadge refactor (Task 6) is behavior-preserving; the CarbonBadge link change (Task 9) is separate
 
 ---
 
@@ -32,7 +34,7 @@
 - Modify: `vite.config.ts`
 
 **Interfaces:**
-- Produces: `GRAMS_PER_TREE: number`, `MEASURED_URL: string`, `COUNTERAPI_BASE: string`, `VISITS_COUNTER: string`, `TREES_COUNTER: string` (all from `config.ts`); `treesOwed(cumulativeGrams: number, treesPurchased: number, gramsPerTree: number): number` (from `treesOwed.ts`)
+- Produces: `GRAMS_PER_TREE: number`, `MEASURED_URL: string`, `COUNTERAPI_BASE: string`, `VISITS_COUNTER: string` (all from `config.ts`); `treesOwed(cumulativeGrams: number, treesPurchased: number, gramsPerTree: number): number` (from `treesOwed.ts`)
 
 - [ ] **Step 1: Add Vitest to the project**
 
@@ -90,7 +92,6 @@ Create `src/lib/impact/config.ts`:
 export const MEASURED_URL = 'https://liammelkersson.xyz/';
 export const COUNTERAPI_BASE = 'https://api.counterapi.dev/v1/liammelkersson-xyz';
 export const VISITS_COUNTER = 'carbon-visits';
-export const TREES_COUNTER = 'trees-purchased';
 export const GRAMS_PER_TREE = 22000;
 ```
 
@@ -157,7 +158,7 @@ git commit -m "Add vitest and treesOwed pure function"
 
 **Interfaces:**
 - Consumes: nothing from Task 1
-- Produces: `monthKey(date: Date): string`; `type PurchaseState = { lastPurchaseMonth: string | null; purchasesThisMonth: number }`, `purchasesThisMonthCount(state: PurchaseState | null, currentMonth: string): number`, `shouldPurchaseTree(owedTrees: number, purchasesThisMonth: number): boolean` — all consumed by Task 9's Netlify function
+- Produces: `monthKey(date: Date): string`; `type PurchaseState = { lastPurchaseMonth: string | null; purchasesThisMonth: number }`, `purchasesThisMonthCount(state: PurchaseState | null, currentMonth: string): number`, `shouldPurchaseTree(owedTrees: number, purchasesThisMonth: number): boolean` — all consumed by Task 10's Netlify function
 
 - [ ] **Step 1: Write the failing test for `monthKey`**
 
@@ -286,7 +287,7 @@ git commit -m "Add monthKey and purchaseDecision pure functions"
 
 **Interfaces:**
 - Consumes: `COUNTERAPI_BASE` from `src/lib/impact/config.ts` (Task 1)
-- Produces: `getCounterCount(counterName: string): Promise<number>`, `incrementCounter(counterName: string): Promise<number>` — consumed by Task 6 (visitTracking), Task 7 (impact page), Task 9 (Netlify function)
+- Produces: `getCounterCount(counterName: string): Promise<number>`, `incrementCounter(counterName: string): Promise<number>` — consumed by Task 7 (visitTracking), Task 8 (impact page), Task 10 (Netlify function)
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -391,7 +392,7 @@ git commit -m "Add counterapi.dev client"
 
 **Interfaces:**
 - Consumes: `MEASURED_URL` from `src/lib/impact/config.ts` (Task 1)
-- Produces: `type CarbonStats = { c: number; p: number }`, `fetchCarbonStats(signal?: AbortSignal): Promise<CarbonStats>` — consumed by Task 5 (CarbonBadge refactor) and Task 7 (impact page)
+- Produces: `type CarbonStats = { c: number; p: number }`, `fetchCarbonStats(signal?: AbortSignal): Promise<CarbonStats>` — consumed by Task 6 (CarbonBadge refactor) and Task 8 (impact page)
 
 This extracts the fetch+localStorage-cache logic currently inline in `CarbonBadge.svelte` so the new `/impact` page can reuse the exact same cached value instead of duplicating the API call and cache key.
 
@@ -511,7 +512,103 @@ git commit -m "Add shared websiteCarbon fetch+cache module"
 
 ---
 
-### Task 5: Refactor `CarbonBadge.svelte` to use the shared module (no behavior change)
+### Task 5: `ecologiReporting` client (ground-truth trees count)
+
+**Files:**
+- Create: `src/lib/impact/ecologiReporting.ts`
+- Create: `src/lib/impact/ecologiReporting.test.ts`
+
+**Interfaces:**
+- Consumes: nothing from earlier tasks
+- Produces: `fetchTreesPlanted(username: string, signal?: AbortSignal): Promise<number>` — consumed by Task 8 (impact page) and Task 10 (Netlify function)
+
+Reads Ecologi's own public Reporting API instead of a self-maintained counter, so the displayed trees-planted number can never drift from what Ecologi actually shows on the user's public profile.
+
+- [ ] **Step 1: Write the failing tests**
+
+Create `src/lib/impact/ecologiReporting.test.ts`:
+
+```ts
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { fetchTreesPlanted } from './ecologiReporting';
+
+describe('fetchTreesPlanted', () => {
+	beforeEach(() => {
+		vi.stubGlobal('fetch', vi.fn());
+	});
+
+	afterEach(() => {
+		vi.unstubAllGlobals();
+	});
+
+	it('returns the total from the reporting API', async () => {
+		vi.mocked(fetch).mockResolvedValue(
+			new Response(JSON.stringify({ total: 173104, pending: 0 }), { status: 200 })
+		);
+
+		const total = await fetchTreesPlanted('liammelkersson');
+
+		expect(total).toBe(173104);
+		expect(fetch).toHaveBeenCalledWith(
+			'https://public.ecologi.com/users/liammelkersson/trees',
+			expect.anything()
+		);
+	});
+
+	it('throws when the response is not ok', async () => {
+		vi.mocked(fetch).mockResolvedValue(new Response('', { status: 404 }));
+
+		await expect(fetchTreesPlanted('liammelkersson')).rejects.toThrow('ecologi reporting request failed');
+	});
+
+	it('throws when the response shape is unexpected', async () => {
+		vi.mocked(fetch).mockResolvedValue(new Response(JSON.stringify({}), { status: 200 }));
+
+		await expect(fetchTreesPlanted('liammelkersson')).rejects.toThrow('unexpected ecologi reporting response');
+	});
+});
+```
+
+- [ ] **Step 2: Run tests to verify they fail**
+
+Run: `npm run test -- ecologiReporting`
+Expected: FAIL — `Cannot find module './ecologiReporting'`
+
+- [ ] **Step 3: Implement `ecologiReporting`**
+
+Create `src/lib/impact/ecologiReporting.ts`:
+
+```ts
+export async function fetchTreesPlanted(username: string, signal?: AbortSignal): Promise<number> {
+	const response = await fetch(`https://public.ecologi.com/users/${encodeURIComponent(username)}/trees`, {
+		signal
+	});
+	if (!response.ok) {
+		throw new Error(`ecologi reporting request failed: ${response.status}`);
+	}
+	const data = await response.json();
+	if (typeof data.total !== 'number') {
+		throw new Error('unexpected ecologi reporting response shape');
+	}
+	return data.total;
+}
+```
+
+- [ ] **Step 4: Run tests to verify they pass**
+
+Run: `npm run test -- ecologiReporting`
+Expected: PASS (3 tests)
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add src/lib/impact/ecologiReporting.ts src/lib/impact/ecologiReporting.test.ts
+git commit -m "Add Ecologi Reporting API client for ground-truth trees count"
+```
+
+---
+
+### Task 6: Refactor `CarbonBadge.svelte` to use the shared module (no behavior change)
 
 **Files:**
 - Modify: `src/lib/components/CarbonBadge.svelte`
@@ -546,7 +643,7 @@ Modify `src/lib/components/CarbonBadge.svelte` — replace the entire `<script>`
 </script>
 ```
 
-Leave the `<a href="https://www.websitecarbon.com/website/liammelkersson-xyz/" ...>` markup below it unchanged — that link changes in Task 8, not here.
+Leave the `<a href="https://www.websitecarbon.com/website/liammelkersson-xyz/" ...>` markup below it unchanged — that link changes in Task 9, not here.
 
 - [ ] **Step 2: Run the full test suite**
 
@@ -562,7 +659,7 @@ git commit -m "Refactor CarbonBadge to use shared websiteCarbon module"
 
 ---
 
-### Task 6: Visit tracking wired into the root layout
+### Task 7: Visit tracking wired into the root layout
 
 **Files:**
 - Create: `src/lib/impact/visitTracking.ts`
@@ -635,23 +732,36 @@ git commit -m "Track site visits via counterapi.dev"
 
 ---
 
-### Task 7: `/impact` page
+### Task 8: `/impact` page
 
 **Files:**
 - Create: `src/routes/impact/+page.svelte`
+- Create: `.env.example`
 
 **Interfaces:**
-- Consumes: `fetchCarbonStats` (Task 4), `getCounterCount` (Task 3), `VISITS_COUNTER`, `TREES_COUNTER`, `GRAMS_PER_TREE` (Task 1), `treesOwed` (Task 1)
+- Consumes: `fetchCarbonStats` (Task 4), `getCounterCount` (Task 3), `fetchTreesPlanted` (Task 5), `VISITS_COUNTER`, `GRAMS_PER_TREE` (Task 1), `treesOwed` (Task 1)
 
-- [ ] **Step 1: Build the page**
+- [ ] **Step 1: Document the public env var**
+
+Create `.env.example`:
+
+```
+# Public Ecologi username — not secret, safe to expose client-side.
+# Leave blank until the Ecologi account exists; the /impact page degrades gracefully.
+PUBLIC_ECOLOGI_USERNAME=
+```
+
+- [ ] **Step 2: Build the page**
 
 Create `src/routes/impact/+page.svelte`:
 
 ```svelte
 <script lang="ts">
+	import { PUBLIC_ECOLOGI_USERNAME } from '$env/static/public';
 	import { fetchCarbonStats } from '$lib/impact/websiteCarbon';
 	import { getCounterCount } from '$lib/impact/counterApi';
-	import { VISITS_COUNTER, TREES_COUNTER, GRAMS_PER_TREE } from '$lib/impact/config';
+	import { fetchTreesPlanted } from '$lib/impact/ecologiReporting';
+	import { VISITS_COUNTER, GRAMS_PER_TREE } from '$lib/impact/config';
 	import { treesOwed } from '$lib/impact/treesOwed';
 
 	let gramsPerView = $state<number | null>(null);
@@ -677,7 +787,9 @@ Create `src/routes/impact/+page.svelte`:
 		Promise.all([
 			fetchCarbonStats(controller.signal),
 			getCounterCount(VISITS_COUNTER),
-			getCounterCount(TREES_COUNTER)
+			PUBLIC_ECOLOGI_USERNAME
+				? fetchTreesPlanted(PUBLIC_ECOLOGI_USERNAME, controller.signal)
+				: Promise.resolve(0)
 		])
 			.then(([carbon, visitCount, treeCount]) => {
 				gramsPerView = carbon.c;
@@ -750,21 +862,21 @@ Create `src/routes/impact/+page.svelte`:
 </div>
 ```
 
-- [ ] **Step 2: Verify manually**
+- [ ] **Step 3: Verify manually**
 
 Run: `npm run dev`, open `/impact` in a browser
-Expected: page renders "Measuring…" briefly, then shows grams/view, trees planted (likely `0` until the offset function runs), total kg, and a progress bar
+Expected: page renders "Measuring…" briefly, then shows grams/view, trees planted (`0` until `PUBLIC_ECOLOGI_USERNAME` is set and the offset function has run), total kg, and a progress bar
 
-- [ ] **Step 3: Commit**
+- [ ] **Step 4: Commit**
 
 ```bash
-git add src/routes/impact/+page.svelte
+git add src/routes/impact/+page.svelte .env.example
 git commit -m "Add /impact carbon offset page"
 ```
 
 ---
 
-### Task 8: Link the footer badge to `/impact`
+### Task 9: Link the footer badge to `/impact`
 
 **Files:**
 - Modify: `src/lib/components/CarbonBadge.svelte`
@@ -793,14 +905,14 @@ git commit -m "Link footer carbon badge to /impact page"
 
 ---
 
-### Task 9: Netlify Scheduled Function for auto-purchasing trees
+### Task 10: Netlify Scheduled Function for auto-purchasing trees
 
 **Files:**
 - Create: `netlify/functions/check-tree-offset.mts`
 - Modify: `package.json`
 
 **Interfaces:**
-- Consumes: `getCounterCount`, `incrementCounter` (Task 3); `treesOwed` (Task 1); `monthKey` (Task 2); `purchasesThisMonthCount`, `shouldPurchaseTree`, `type PurchaseState` (Task 2); `VISITS_COUNTER`, `TREES_COUNTER`, `GRAMS_PER_TREE`, `MEASURED_URL` (Task 1)
+- Consumes: `getCounterCount` (Task 3); `fetchTreesPlanted` (Task 5); `treesOwed` (Task 1); `monthKey` (Task 2); `purchasesThisMonthCount`, `shouldPurchaseTree`, `type PurchaseState` (Task 2); `VISITS_COUNTER`, `GRAMS_PER_TREE`, `MEASURED_URL` (Task 1)
 
 No automated test for this file — per the spec, the real test is running it with `DRY_RUN=true` against live data after deploy and confirming the logged output.
 
@@ -823,7 +935,8 @@ Create `netlify/functions/check-tree-offset.mts`:
 ```ts
 import type { Config } from '@netlify/functions';
 import { getStore } from '@netlify/blobs';
-import { getCounterCount, incrementCounter } from '../../src/lib/impact/counterApi';
+import { getCounterCount } from '../../src/lib/impact/counterApi';
+import { fetchTreesPlanted } from '../../src/lib/impact/ecologiReporting';
 import { treesOwed } from '../../src/lib/impact/treesOwed';
 import { monthKey } from '../../src/lib/impact/monthKey';
 import {
@@ -831,9 +944,9 @@ import {
 	shouldPurchaseTree,
 	type PurchaseState
 } from '../../src/lib/impact/purchaseDecision';
-import { VISITS_COUNTER, TREES_COUNTER, GRAMS_PER_TREE, MEASURED_URL } from '../../src/lib/impact/config';
+import { VISITS_COUNTER, GRAMS_PER_TREE, MEASURED_URL } from '../../src/lib/impact/config';
 
-const ECOLOGI_ENDPOINT = 'https://public.ecologi.com/impact/trees';
+const ECOLOGI_PURCHASE_ENDPOINT = 'https://public.ecologi.com/impact/trees';
 const PURCHASE_STATE_STORE = 'impact';
 const PURCHASE_STATE_KEY = 'purchase-state';
 
@@ -850,16 +963,16 @@ async function fetchGramsPerView(): Promise<number> {
 }
 
 async function purchaseTree(apiKey: string, idempotencyKey: string): Promise<void> {
-	const response = await fetch(ECOLOGI_ENDPOINT, {
+	const response = await fetch(ECOLOGI_PURCHASE_ENDPOINT, {
 		method: 'POST',
 		headers: {
 			Authorization: `Bearer ${apiKey}`,
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
+			'Idempotency-Key': idempotencyKey
 		},
 		body: JSON.stringify({
 			number: 1,
-			name: 'liammelkersson.xyz carbon offset',
-			'Idempotency-Key': idempotencyKey
+			name: 'liammelkersson.xyz carbon offset'
 		})
 	});
 	if (!response.ok) {
@@ -870,20 +983,21 @@ async function purchaseTree(apiKey: string, idempotencyKey: string): Promise<voi
 export default async () => {
 	try {
 		const apiKey = process.env.ECOLOGI_API_KEY;
-		if (!apiKey) {
-			console.log('check-tree-offset: ECOLOGI_API_KEY not configured, skipping run');
+		const username = process.env.PUBLIC_ECOLOGI_USERNAME;
+		if (!apiKey || !username) {
+			console.log('check-tree-offset: ECOLOGI_API_KEY or PUBLIC_ECOLOGI_USERNAME not configured, skipping run');
 			return new Response('not configured', { status: 200 });
 		}
 
 		const [visits, treesPurchased, gramsPerView] = await Promise.all([
 			getCounterCount(VISITS_COUNTER),
-			getCounterCount(TREES_COUNTER),
+			fetchTreesPlanted(username),
 			fetchGramsPerView()
 		]);
 
 		const owed = treesOwed(visits * gramsPerView, treesPurchased, GRAMS_PER_TREE);
 		if (owed < 1) {
-			console.log(`check-tree-offset: no trees owed yet (${visits} visits, ${treesPurchased} purchased)`);
+			console.log(`check-tree-offset: no trees owed yet (${visits} visits, ${treesPurchased} already planted)`);
 			return new Response('no trees owed', { status: 200 });
 		}
 
@@ -903,7 +1017,6 @@ export default async () => {
 		}
 
 		await purchaseTree(apiKey, `tree-offset-${currentMonth}`);
-		await incrementCounter(TREES_COUNTER);
 		await store.setJSON(PURCHASE_STATE_KEY, {
 			lastPurchaseMonth: currentMonth,
 			purchasesThisMonth: purchasesThisMonth + 1
@@ -923,6 +1036,8 @@ export const config: Config = {
 };
 ```
 
+Note: no counter to increment after a successful purchase — Ecologi's own Reporting API (`fetchTreesPlanted`) reflects the new purchase on its own, which is the entire point of using it as ground truth instead of a self-maintained counter.
+
 - [ ] **Step 3: Verify the function builds**
 
 Run: `npx tsc --noEmit netlify/functions/check-tree-offset.mts --module esnext --moduleResolution bundler --target es2022 --skipLibCheck`
@@ -938,20 +1053,21 @@ git commit -m "Add scheduled function to auto-purchase offset trees via Ecologi"
 - [ ] **Step 5: Post-deploy manual steps (not part of this commit)**
 
 After this deploys to Netlify:
-1. Set `ECOLOGI_API_KEY` in Netlify's site environment variables once the user's Ecologi account exists
-2. Leave `DRY_RUN` unset (defaults to dry-run) and check the function's logs in the Netlify dashboard after a few scheduled runs to confirm the math looks right
-3. Only then set `DRY_RUN=false` to let it actually purchase
+1. Create the Ecologi account, get the public username, set `PUBLIC_ECOLOGI_USERNAME` in Netlify's site environment variables (and locally in `.env` for dev) — this alone makes the `/impact` page show real trees-planted numbers
+2. Once the Ecologi API key exists, set `ECOLOGI_API_KEY` in Netlify's site environment variables
+3. Leave `DRY_RUN` unset (defaults to dry-run) and check the function's logs in the Netlify dashboard after a few scheduled runs to confirm the math looks right
+4. Only then set `DRY_RUN=false` to let it actually purchase
 
 ---
 
 ## Post-plan spec coverage check
 
-- Per-view grams display → Task 7 ✓
-- Total visits counter → Task 6, 7 ✓
-- Cumulative CO2 → Task 7 (`totalGrams`/`totalKg`) ✓
-- Trees planted display → Task 7 ✓
-- Progress bar → Task 7 ✓
-- Footer link → Task 8 ✓
-- Scheduled auto-purchase, monthly cap, DRY_RUN, idempotency key → Task 9 ✓
-- Error handling table from spec → try/catch in Task 9, `.catch` fallbacks in Task 6/7 ✓
-- Pure-function unit tests → Tasks 1, 2, 3, 4 ✓
+- Per-view grams display → Task 8 ✓
+- Total visits counter → Task 7, 8 ✓
+- Cumulative CO2 → Task 8 (`totalGrams`/`totalKg`) ✓
+- Trees planted display → Task 8, sourced from Ecologi's own Reporting API (Task 5) rather than a self-maintained counter — a deliberate deviation from the original spec's `trees-purchased` counterapi.dev counter, made after discovering Ecologi's public Reporting API during implementation planning; removes a drift-risk class the spec's design didn't need to accept ✓
+- Progress bar → Task 8 ✓
+- Footer link → Task 9 ✓
+- Scheduled auto-purchase, monthly cap, DRY_RUN, idempotency key (as an HTTP header, corrected from the spec's initial body-field assumption) → Task 10 ✓
+- Error handling table from spec → try/catch in Task 10, `.catch` fallbacks in Task 7/8 ✓
+- Pure-function unit tests → Tasks 1, 2, 3, 4, 5 ✓
