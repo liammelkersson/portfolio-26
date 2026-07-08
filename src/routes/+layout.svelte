@@ -1,8 +1,14 @@
 <script lang="ts">
 	import '../app.css';
+	import { browser } from '$app/environment';
 	import AsciiBackground from '$lib/components/AsciiBackground.svelte';
+	import { trackVisit } from '$lib/impact/visitTracking';
 
 	let { children } = $props();
+
+	$effect(() => {
+		if (browser) trackVisit();
+	});
 </script>
 
 <svelte:head>
