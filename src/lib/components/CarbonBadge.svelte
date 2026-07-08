@@ -1,43 +1,14 @@
 <script lang="ts">
-	const MEASURED_URL = 'https://liammelkersson.xyz/';
-	const CACHE_KEY = 'carbon-badge';
-	const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+	import { fetchCarbonStats, type CarbonStats } from '$lib/impact/websiteCarbon';
 
-	type CarbonResult = { c: number; p: number };
-
-	let result = $state<CarbonResult | null>(null);
+	let result = $state<CarbonStats | null>(null);
 	let failed = $state(false);
 
-	const readCache = (): CarbonResult | null => {
-		try {
-			const raw = localStorage.getItem(CACHE_KEY);
-			if (!raw) return null;
-			const cached = JSON.parse(raw);
-			if (Date.now() - cached.t > CACHE_TTL_MS) return null;
-			return cached.v;
-		} catch {
-			return null;
-		}
-	};
-
 	$effect(() => {
-		const cached = readCache();
-		if (cached) {
-			result = cached;
-			return;
-		}
 		const controller = new AbortController();
-		fetch(`https://api.websitecarbon.com/b?url=${encodeURIComponent(MEASURED_URL)}`, {
-			signal: controller.signal
-		})
-			.then((response) => (response.ok ? response.json() : null))
+		fetchCarbonStats(controller.signal)
 			.then((data) => {
-				if (data && typeof data.c === 'number' && typeof data.p === 'number') {
-					result = data;
-					localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), v: data }));
-				} else {
-					failed = true;
-				}
+				result = data;
 			})
 			.catch(() => {
 				failed = true;
