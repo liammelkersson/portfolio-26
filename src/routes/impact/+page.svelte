@@ -8,6 +8,7 @@
 	import Footer from '$lib/components/Footer.svelte';
 	import AsciiTree from '$lib/components/AsciiTree.svelte';
 	import AsciiBonsai from '$lib/components/AsciiBonsai.svelte';
+	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 
 	let gramsPerView = $state<number | null>(null);
 	let visits = $state<number | null>(null);
@@ -53,9 +54,12 @@
 </svelte:head>
 
 <div class="mx-auto max-w-3xl px-6 py-24">
-	<a href="/" class="text-base opacity-60 transition-opacity hover:opacity-100">
-		<span style="font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif">←</span> back
-	</a>
+	<div class="flex items-center justify-between">
+		<a href="/" class="text-base opacity-60 transition-opacity hover:opacity-100">
+			<span style="font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif">←</span> back
+		</a>
+		<ThemeToggle />
+	</div>
 
 	<AsciiBonsai />
 
