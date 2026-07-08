@@ -6,7 +6,6 @@
 	import { VISITS_COUNTER, GRAMS_PER_TREE } from '$lib/impact/config';
 	import { treesOwed } from '$lib/impact/treesOwed';
 	import Footer from '$lib/components/Footer.svelte';
-	import AsciiBonsai from '$lib/components/AsciiBonsai.svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 
 	let gramsPerView = $state<number | null>(null);
@@ -60,8 +59,6 @@
 		</a>
 		<ThemeToggle />
 	</div>
-
-	<AsciiBonsai />
 
 	{#if failed}
 		<p class="mt-6 text-base opacity-60">Couldn't load impact data right now.</p>
