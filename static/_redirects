@@ -3,3 +3,6 @@
 /03 / 301
 /05 / 301
 /static/* / 301
+
+# Friendly path for the visit-counter Netlify Function
+/api/visit-counter /.netlify/functions/visit-counter 200

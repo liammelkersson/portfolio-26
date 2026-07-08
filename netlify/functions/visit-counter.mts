@@ -1,6 +1,5 @@
-import type { Config } from '@netlify/functions';
 import { getStore } from '@netlify/blobs';
-import { VISITS_STORE, VISITS_KEY, VISIT_COUNTER_PATH } from '../../src/lib/impact/config';
+import { VISITS_STORE, VISITS_KEY } from '../../src/lib/impact/config';
 
 export default async (request: Request) => {
 	const store = getStore(VISITS_STORE);
@@ -22,8 +21,4 @@ export default async (request: Request) => {
 	}
 
 	return new Response('method not allowed', { status: 405 });
-};
-
-export const config: Config = {
-	path: VISIT_COUNTER_PATH
 };
