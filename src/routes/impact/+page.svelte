@@ -50,11 +50,8 @@
 </svelte:head>
 
 <div class="mx-auto max-w-3xl px-6 py-24">
-	<a
-		href="/"
-		class="text-sm opacity-60 transition-opacity hover:opacity-100"
-	>
-		← back
+	<a href="/" class="text-sm opacity-60 transition-opacity hover:opacity-100">
+		<span style="font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif">←</span> back
 	</a>
 
 	{#if failed}
@@ -103,6 +100,14 @@
 				class="underline underline-offset-2"
 			>
 				Ecologi
+			</a>. Full report on
+			<a
+				href="https://www.websitecarbon.com/website/liammelkersson-xyz/"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="underline underline-offset-2"
+			>
+				Website Carbon
 			</a>.
 		</p>
 	{/if}
