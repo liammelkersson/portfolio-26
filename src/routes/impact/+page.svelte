@@ -50,6 +50,14 @@
 	<script src="https://unpkg.com/website-carbon-badges@1.1.3/b.min.js" defer></script>
 </svelte:head>
 
+<div class="pointer-events-none fixed inset-0 -z-20 overflow-hidden" aria-hidden="true">
+	<img
+		src="/impact/hillside.webp"
+		alt=""
+		class="h-full w-full scale-110 object-cover opacity-30 blur-3xl dark:opacity-20"
+	/>
+</div>
+
 <div class="mx-auto max-w-3xl px-6 py-24">
 	<div class="flex items-center justify-between">
 		<a href="/" class="text-base opacity-60 transition-opacity hover:opacity-100">
