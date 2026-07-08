@@ -62,8 +62,7 @@
 	</div>
 	<p {@attach reveal(100)} class="mt-8 max-w-xl leading-relaxed">
 		I'm a designer who codes, happiest where the two meet: when something well-designed is also
-		well-built and using it feels effortless. I do that at Awaio, where I'm responsible for
-		design, marketing and web.
+		well-built and using it feels effortless.
 	</p>
 	<ul {@attach reveal(200)} class="mt-10 flex w-full flex-wrap items-center justify-between gap-x-6 gap-y-4">
 		{#each companyLogos as logo, index (logo.name)}

@@ -2,4 +2,8 @@
 User-agent: *
 Disallow:
 
+# keep album covers out of image search so project screenshots surface instead
+User-agent: Googlebot-Image
+Disallow: /vinyls/
+
 Sitemap: https://liammelkersson.xyz/sitemap.xml
