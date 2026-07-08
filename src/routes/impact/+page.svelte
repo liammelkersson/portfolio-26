@@ -7,6 +7,7 @@
 	import { treesOwed } from '$lib/impact/treesOwed';
 	import Footer from '$lib/components/Footer.svelte';
 	import AsciiTree from '$lib/components/AsciiTree.svelte';
+	import AsciiBonsai from '$lib/components/AsciiBonsai.svelte';
 
 	let gramsPerView = $state<number | null>(null);
 	let visits = $state<number | null>(null);
@@ -55,6 +56,8 @@
 	<a href="/" class="text-base opacity-60 transition-opacity hover:opacity-100">
 		<span style="font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif">←</span> back
 	</a>
+
+	<AsciiBonsai />
 
 	{#if failed}
 		<p class="mt-6 text-base opacity-60">Couldn't load impact data right now.</p>
