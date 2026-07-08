@@ -50,38 +50,38 @@
 </svelte:head>
 
 <div class="mx-auto max-w-3xl px-6 py-24">
-	<a href="/" class="text-sm opacity-60 transition-opacity hover:opacity-100">
+	<a href="/" class="text-base opacity-60 transition-opacity hover:opacity-100">
 		<span style="font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif">←</span> back
 	</a>
 
 	{#if failed}
-		<p class="mt-6 text-sm opacity-60">Couldn't load impact data right now.</p>
+		<p class="mt-6 text-base opacity-60">Couldn't load impact data right now.</p>
 	{:else if gramsPerView === null}
-		<p class="mt-6 text-sm opacity-60">Measuring…</p>
+		<p class="mt-6 text-base opacity-60">Measuring…</p>
 	{:else}
 		<div class="mt-12 grid gap-12 sm:grid-cols-2">
 			<div>
-				<p class="text-sm opacity-60">This website consumes</p>
-				<p class="mt-2 text-6xl font-semibold">{gramsPerView}</p>
-				<p class="mt-2 text-sm opacity-60">grams of CO2 per view</p>
+				<p class="text-base opacity-60">This website consumes</p>
+				<p class="mt-2 text-7xl font-semibold">{gramsPerView}</p>
+				<p class="mt-2 text-base opacity-60">grams of CO2 per view</p>
 			</div>
 			<div>
-				<p class="text-sm opacity-60">Since this website's first publish</p>
-				<p class="mt-2 text-6xl font-semibold">{treesPurchased}</p>
-				<p class="mt-2 text-sm opacity-60">trees have been planted to offset CO2 use</p>
+				<p class="text-base opacity-60">Since this website's first publish</p>
+				<p class="mt-2 text-7xl font-semibold">{treesPurchased}</p>
+				<p class="mt-2 text-base opacity-60">trees have been planted to offset CO2 use</p>
 			</div>
 		</div>
 
 		<div class="mt-12">
-			<p class="text-sm opacity-60">Total CO2 emitted across {visits} visits</p>
-			<p class="mt-2 text-4xl font-semibold">{totalKg?.toFixed(2)}kg</p>
+			<p class="text-base opacity-60">Total CO2 emitted across {visits} visits</p>
+			<p class="mt-2 text-5xl font-semibold">{totalKg?.toFixed(2)}kg</p>
 			{#if treesStillOwed !== null && treesStillOwed > 0}
-				<p class="mt-1 text-sm opacity-60">{treesStillOwed} tree(s) owed, queued for the next offset run</p>
+				<p class="mt-1 text-base opacity-60">{treesStillOwed} tree(s) owed, queued for the next offset run</p>
 			{/if}
 		</div>
 
 		<div class="mt-8">
-			<p class="text-sm opacity-60">Progress to next tree</p>
+			<p class="text-base opacity-60">Progress to next tree</p>
 			<div class="mt-2 h-2 w-full rounded-full bg-neutral-200 dark:bg-neutral-800">
 				<div
 					class="h-2 rounded-full bg-current"
@@ -90,7 +90,7 @@
 			</div>
 		</div>
 
-		<p class="mt-12 text-xs opacity-50">
+		<p class="mt-12 text-sm opacity-50">
 			Estimated from live per-view carbon data and total visits since launch. Offsets purchased
 			automatically through
 			<a
