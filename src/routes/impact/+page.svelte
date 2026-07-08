@@ -56,8 +56,6 @@
 </svelte:head>
 
 <div class="mx-auto max-w-3xl px-6 py-24">
-	<h1 class="text-3xl font-semibold">Carbon impact</h1>
-
 	{#if failed}
 		<p class="mt-6 text-sm opacity-60">Couldn't load impact data right now.</p>
 	{:else if gramsPerView === null}
