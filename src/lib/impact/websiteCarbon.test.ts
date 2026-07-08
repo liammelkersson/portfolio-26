@@ -33,7 +33,10 @@ describe('fetchCarbonStats', () => {
 		const result = await fetchCarbonStats();
 
 		expect(result).toEqual({ c: 1.39, p: 17 });
-		expect(fetch).toHaveBeenCalledTimes(1);
+		expect(fetch).toHaveBeenCalledWith(
+			expect.stringContaining('api.websitecarbon.com'),
+			expect.anything()
+		);
 		expect(JSON.parse(localStorage.getItem('carbon-badge')!).v).toEqual({ c: 1.39, p: 17 });
 	});
 

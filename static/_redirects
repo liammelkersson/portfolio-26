@@ -4,5 +4,6 @@
 /05 / 301
 /static/* / 301
 
-# Friendly path for the visit-counter Netlify Function
+# Friendly paths for Netlify Functions
 /api/visit-counter /.netlify/functions/visit-counter 200
+/api/report-carbon-stats /.netlify/functions/report-carbon-stats 200

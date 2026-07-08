@@ -8,28 +8,24 @@ import {
 	shouldPurchaseTree,
 	type PurchaseState
 } from '../../src/lib/impact/purchaseDecision';
-import { VISITS_STORE, VISITS_KEY, GRAMS_PER_TREE, MEASURED_URL } from '../../src/lib/impact/config';
+import { VISITS_STORE, VISITS_KEY, CARBON_STATS_KEY, GRAMS_PER_TREE } from '../../src/lib/impact/config';
 
 const ECOLOGI_PURCHASE_ENDPOINT = 'https://public.ecologi.com/impact/trees';
 const PURCHASE_STATE_KEY = 'purchase-state';
 
-// Website Carbon deprecated public access to their full crawl API in July 2025,
-// but this legacy /b endpoint still responds — same source the footer badge
-// and /impact page display, so it only updates whenever they next recrawl.
-async function fetchGramsPerView(): Promise<number> {
-	const response = await fetch(`https://api.websitecarbon.com/b?url=${encodeURIComponent(MEASURED_URL)}`);
-	if (!response.ok) {
-		throw new Error(`websitecarbon request failed: ${response.status}`);
-	}
-	const data = await response.json();
-	if (typeof data.c !== 'number') {
-		throw new Error('unexpected websitecarbon response shape');
-	}
-	return data.c;
-}
+type CarbonStats = { c: number; p: number };
 
 async function readVisitCount(store: ReturnType<typeof getStore>): Promise<number> {
 	return ((await store.get(VISITS_KEY, { type: 'json' })) as number | null) ?? 0;
+}
+
+// Netlify's outbound IP range is blocked by Website Carbon's Cloudflare setup
+// (confirmed: consistent 403s), so this reads the value the client already
+// fetched successfully and reported to /api/report-carbon-stats instead of
+// calling websitecarbon.com directly.
+async function readGramsPerView(store: ReturnType<typeof getStore>): Promise<number | null> {
+	const stats = (await store.get(CARBON_STATS_KEY, { type: 'json' })) as CarbonStats | null;
+	return stats?.c ?? null;
 }
 
 async function purchaseTree(apiKey: string, idempotencyKey: string): Promise<void> {
@@ -64,8 +60,13 @@ export default async () => {
 		const [visits, treesPurchased, gramsPerView] = await Promise.all([
 			readVisitCount(store),
 			fetchTreesPlanted(username),
-			fetchGramsPerView()
+			readGramsPerView(store)
 		]);
+
+		if (gramsPerView === null) {
+			console.log('check-tree-offset: no carbon stats reported yet, skipping run');
+			return new Response('carbon stats not reported', { status: 200 });
+		}
 
 		const owed = treesOwed(visits * gramsPerView, treesPurchased, GRAMS_PER_TREE);
 		if (owed < 1) {
