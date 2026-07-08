@@ -17,12 +17,7 @@
 	});
 </script>
 
-<a
-	href="https://www.websitecarbon.com/website/liammelkersson-xyz/"
-	target="_blank"
-	rel="noopener noreferrer"
-	class="text-xs opacity-60 transition-opacity hover:opacity-100"
->
+<a href="/impact" class="text-xs opacity-60 transition-opacity hover:opacity-100">
 	{#if result}
 		{result.c}g CO₂/view · cleaner than {result.p}% of pages
 	{:else if failed}
