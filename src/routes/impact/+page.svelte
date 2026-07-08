@@ -7,6 +7,7 @@
 	import { treesOwed } from '$lib/impact/treesOwed';
 	import Footer from '$lib/components/Footer.svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
+	import CountUp from '$lib/components/CountUp.svelte';
 
 	let gramsPerView = $state<number | null>(null);
 	let visits = $state<number | null>(null);
@@ -68,26 +69,26 @@
 		<div class="mt-12 grid gap-12 sm:grid-cols-2">
 			<div>
 				<p class="text-base opacity-60">This website consumes</p>
-				<p class="mt-2 text-7xl font-semibold">{gramsPerView}</p>
+				<p class="mt-2 text-7xl font-semibold"><CountUp value={gramsPerView ?? 0} decimals={2} /></p>
 				<p class="mt-2 text-base opacity-60">grams of CO₂ per view</p>
 			</div>
 			<div>
 				<p class="text-base opacity-60">Since this website's first publish</p>
-				<p class="mt-2 text-7xl font-semibold">{treesPurchased}</p>
+				<p class="mt-2 text-7xl font-semibold"><CountUp value={treesPurchased ?? 0} /></p>
 				<p class="mt-2 text-base opacity-60">trees have been planted to offset CO₂ use</p>
 			</div>
 		</div>
 
 		<div class="mt-12">
 			<p class="text-base opacity-60">Total CO₂ emitted across {visits} visits</p>
-			<p class="mt-2 text-5xl font-semibold">{totalKg?.toFixed(2)}kg</p>
+			<p class="mt-2 text-5xl font-semibold"><CountUp value={totalKg ?? 0} decimals={2} />kg</p>
 			{#if treesStillOwed !== null && treesStillOwed > 0}
 				<p class="mt-1 text-base opacity-60">{treesStillOwed} tree(s) owed, queued for the next offset run</p>
 			{/if}
 		</div>
 
 		<div class="mt-8">
-			<p class="text-base opacity-60">Progress to next tree</p>
+			<p class="text-base opacity-60">CO₂ pending next automatic offset</p>
 			<div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-800">
 				<div
 					class="h-2 rounded-full"
