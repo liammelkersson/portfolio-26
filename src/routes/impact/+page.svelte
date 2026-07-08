@@ -6,7 +6,6 @@
 	import { VISITS_COUNTER, GRAMS_PER_TREE } from '$lib/impact/config';
 	import { treesOwed } from '$lib/impact/treesOwed';
 	import Footer from '$lib/components/Footer.svelte';
-	import AsciiTree from '$lib/components/AsciiTree.svelte';
 	import AsciiBonsai from '$lib/components/AsciiBonsai.svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 
@@ -89,17 +88,14 @@
 			{/if}
 		</div>
 
-		<div class="mt-8 flex items-end gap-4">
-			<div class="flex-1">
-				<p class="text-base opacity-60">Progress to next tree</p>
-				<div class="mt-2 h-2 w-full rounded-full bg-neutral-200 dark:bg-neutral-800">
-					<div
-						class="h-2 rounded-full"
-						style="width: {(progressToNextTree ?? 0) * 100}%; background-color: #34C759"
-					></div>
-				</div>
+		<div class="mt-8">
+			<p class="text-base opacity-60">Progress to next tree</p>
+			<div class="mt-2 h-2 w-full rounded-full bg-neutral-200 dark:bg-neutral-800">
+				<div
+					class="h-2 rounded-full"
+					style="width: {(progressToNextTree ?? 0) * 100}%; background-color: #34C759"
+				></div>
 			</div>
-			<AsciiTree progress={progressToNextTree ?? 0} />
 		</div>
 
 		<p class="mt-12 text-sm opacity-50">
