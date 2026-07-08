@@ -50,6 +50,7 @@
 
 <svelte:head>
 	<title>Carbon impact — Liam Melkersson</title>
+	<script src="https://unpkg.com/website-carbon-badges@1.1.3/b.min.js" defer></script>
 </svelte:head>
 
 <div class="mx-auto max-w-3xl px-6 py-24">
@@ -117,6 +118,8 @@
 				Website Carbon
 			</a>.
 		</p>
+
+		<div id="wcb" class="carbonbadge mt-6"></div>
 	{/if}
 </div>
 <Footer showCarbonBadge={false} />
