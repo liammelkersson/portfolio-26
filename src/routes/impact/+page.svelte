@@ -5,6 +5,7 @@
 	import { fetchTreesPlanted } from '$lib/impact/ecologiReporting';
 	import { VISITS_COUNTER, GRAMS_PER_TREE } from '$lib/impact/config';
 	import { treesOwed } from '$lib/impact/treesOwed';
+	import Footer from '$lib/components/Footer.svelte';
 
 	let gramsPerView = $state<number | null>(null);
 	let visits = $state<number | null>(null);
@@ -112,3 +113,4 @@
 		</p>
 	{/if}
 </div>
+<Footer />
