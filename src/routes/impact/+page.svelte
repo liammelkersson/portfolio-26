@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { env } from '$env/dynamic/public';
 	import { fetchCarbonStats } from '$lib/impact/websiteCarbon';
-	import { getCounterCount } from '$lib/impact/counterApi';
+	import { getVisitCount } from '$lib/impact/visitCounter';
 	import { fetchTreesPlanted } from '$lib/impact/ecologiReporting';
-	import { VISITS_COUNTER, GRAMS_PER_TREE } from '$lib/impact/config';
+	import { GRAMS_PER_TREE } from '$lib/impact/config';
 	import { treesOwed } from '$lib/impact/treesOwed';
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
@@ -28,7 +28,7 @@
 		const controller = new AbortController();
 		Promise.allSettled([
 			fetchCarbonStats(controller.signal),
-			getCounterCount(VISITS_COUNTER),
+			getVisitCount(controller.signal),
 			env.PUBLIC_ECOLOGI_USERNAME
 				? fetchTreesPlanted(env.PUBLIC_ECOLOGI_USERNAME, controller.signal)
 				: Promise.resolve(0)

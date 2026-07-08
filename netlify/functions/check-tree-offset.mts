@@ -1,6 +1,5 @@
 import type { Config } from '@netlify/functions';
 import { getStore } from '@netlify/blobs';
-import { getCounterCount } from '../../src/lib/impact/counterApi';
 import { fetchTreesPlanted } from '../../src/lib/impact/ecologiReporting';
 import { treesOwed } from '../../src/lib/impact/treesOwed';
 import { monthKey } from '../../src/lib/impact/monthKey';
@@ -9,10 +8,9 @@ import {
 	shouldPurchaseTree,
 	type PurchaseState
 } from '../../src/lib/impact/purchaseDecision';
-import { VISITS_COUNTER, GRAMS_PER_TREE, MEASURED_URL } from '../../src/lib/impact/config';
+import { VISITS_STORE, VISITS_KEY, GRAMS_PER_TREE, MEASURED_URL } from '../../src/lib/impact/config';
 
 const ECOLOGI_PURCHASE_ENDPOINT = 'https://public.ecologi.com/impact/trees';
-const PURCHASE_STATE_STORE = 'impact';
 const PURCHASE_STATE_KEY = 'purchase-state';
 
 // Website Carbon deprecated public access to their full crawl API in July 2025,
@@ -28,6 +26,10 @@ async function fetchGramsPerView(): Promise<number> {
 		throw new Error('unexpected websitecarbon response shape');
 	}
 	return data.c;
+}
+
+async function readVisitCount(store: ReturnType<typeof getStore>): Promise<number> {
+	return ((await store.get(VISITS_KEY, { type: 'json' })) as number | null) ?? 0;
 }
 
 async function purchaseTree(apiKey: string, idempotencyKey: string): Promise<void> {
@@ -57,8 +59,10 @@ export default async () => {
 			return new Response('not configured', { status: 200 });
 		}
 
+		const store = getStore(VISITS_STORE);
+
 		const [visits, treesPurchased, gramsPerView] = await Promise.all([
-			getCounterCount(VISITS_COUNTER),
+			readVisitCount(store),
 			fetchTreesPlanted(username),
 			fetchGramsPerView()
 		]);
@@ -69,7 +73,6 @@ export default async () => {
 			return new Response('no trees owed', { status: 200 });
 		}
 
-		const store = getStore(PURCHASE_STATE_STORE);
 		const state = (await store.get(PURCHASE_STATE_KEY, { type: 'json' })) as PurchaseState | null;
 		const currentMonth = monthKey(new Date());
 		const purchasesThisMonth = purchasesThisMonthCount(state, currentMonth);
