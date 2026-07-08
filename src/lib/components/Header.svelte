@@ -14,8 +14,6 @@
 	</a>
 	<nav class="flex items-center gap-6 text-sm">
 		<a href="/" class="opacity-60 transition-opacity hover:opacity-100">Home</a>
-		<a href="/#work" class="opacity-60 transition-opacity hover:opacity-100">Work</a>
-		<a href="/#links" class="opacity-60 transition-opacity hover:opacity-100">Contact</a>
 		<a href="/impact" class="opacity-60 transition-opacity hover:opacity-100">Impact</a>
 		<ThemeToggle />
 	</nav>
