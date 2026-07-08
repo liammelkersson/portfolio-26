@@ -52,14 +52,9 @@
 
 <div class="pointer-events-none fixed inset-0 -z-20 overflow-hidden" aria-hidden="true">
 	<img
-		src="/impact/forest.webp"
-		alt=""
-		class="h-full w-full scale-110 object-cover opacity-30 blur-lg dark:hidden"
-	/>
-	<img
 		src="/impact/hillside.webp"
 		alt=""
-		class="hidden h-full w-full scale-110 object-cover opacity-20 blur-3xl dark:block"
+		class="h-full w-full scale-110 object-cover opacity-30 blur-lg dark:opacity-20 dark:blur-3xl"
 	/>
 </div>
 
