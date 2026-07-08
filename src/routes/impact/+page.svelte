@@ -47,6 +47,31 @@
 
 <svelte:head>
 	<title>Carbon impact — Liam Melkersson</title>
+	<meta
+		name="description"
+		content="Live CO2 footprint of liammelkersson.xyz — grams emitted per view, total visits, and trees planted automatically through Ecologi to offset it."
+	/>
+	<link rel="canonical" href="https://liammelkersson.xyz/impact" />
+
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://liammelkersson.xyz/impact" />
+	<meta property="og:title" content="Carbon impact — Liam Melkersson" />
+	<meta
+		property="og:description"
+		content="Live CO2 footprint of liammelkersson.xyz, offset automatically through Ecologi."
+	/>
+	<meta property="og:image" content="https://liammelkersson.xyz/portrait.jpg" />
+	<meta property="og:image:width" content="640" />
+	<meta property="og:image:height" content="640" />
+
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Carbon impact — Liam Melkersson" />
+	<meta
+		name="twitter:description"
+		content="Live CO2 footprint of liammelkersson.xyz, offset automatically through Ecologi."
+	/>
+	<meta name="twitter:image" content="https://liammelkersson.xyz/portrait.jpg" />
+
 	<script src="https://unpkg.com/website-carbon-badges@1.1.3/b.min.js" defer></script>
 </svelte:head>
 
