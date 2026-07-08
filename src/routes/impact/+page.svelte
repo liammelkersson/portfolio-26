@@ -5,8 +5,8 @@
 	import { fetchTreesPlanted } from '$lib/impact/ecologiReporting';
 	import { VISITS_COUNTER, GRAMS_PER_TREE } from '$lib/impact/config';
 	import { treesOwed } from '$lib/impact/treesOwed';
+	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
-	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 	import CountUp from '$lib/components/CountUp.svelte';
 
 	let gramsPerView = $state<number | null>(null);
@@ -58,13 +58,12 @@
 	/>
 </div>
 
-<div class="mx-auto max-w-3xl px-6 py-24">
-	<div class="flex items-center justify-between">
-		<a href="/" class="text-base opacity-60 transition-opacity hover:opacity-100">
-			<span style="font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif">←</span> back
-		</a>
-		<ThemeToggle />
-	</div>
+<Header />
+
+<div class="mx-auto max-w-3xl px-6 py-12">
+	<a href="/" class="text-base opacity-60 transition-opacity hover:opacity-100">
+		<span style="font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif">←</span> back
+	</a>
 
 	{#if failed}
 		<p class="mt-6 text-base opacity-60">Couldn't load impact data right now.</p>
