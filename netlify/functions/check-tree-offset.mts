@@ -57,11 +57,12 @@ export default async () => {
 
 		const store = getStore(VISITS_STORE);
 
-		const [visits, treesPurchased, gramsPerView] = await Promise.all([
+		const [visits, treesStatus, gramsPerView] = await Promise.all([
 			readVisitCount(store),
 			fetchTreesPlanted(username),
 			readGramsPerView(store)
 		]);
+		const treesPurchased = treesStatus.total;
 
 		if (gramsPerView === null) {
 			console.log('check-tree-offset: no carbon stats reported yet, skipping run');

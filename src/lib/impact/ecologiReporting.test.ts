@@ -10,14 +10,14 @@ describe('fetchTreesPlanted', () => {
 		vi.unstubAllGlobals();
 	});
 
-	it('returns the total from the reporting API', async () => {
+	it('returns the total and pending counts from the reporting API', async () => {
 		vi.mocked(fetch).mockResolvedValue(
-			new Response(JSON.stringify({ total: 173104, pending: 0 }), { status: 200 })
+			new Response(JSON.stringify({ total: 173104, pending: 1 }), { status: 200 })
 		);
 
-		const total = await fetchTreesPlanted('liammelkersson');
+		const status = await fetchTreesPlanted('liammelkersson');
 
-		expect(total).toBe(173104);
+		expect(status).toEqual({ total: 173104, pending: 1 });
 		expect(fetch).toHaveBeenCalledWith(
 			'https://public.ecologi.com/users/liammelkersson/trees',
 			expect.anything()
