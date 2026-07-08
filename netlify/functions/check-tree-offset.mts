@@ -16,9 +16,8 @@ const PURCHASE_STATE_STORE = 'impact';
 const PURCHASE_STATE_KEY = 'purchase-state';
 
 // Website Carbon deprecated public access to their full crawl API in July 2025,
-// but this legacy /b endpoint still responds — good enough for a rough,
-// internal purchase-trigger number. Not shown to visitors (see /impact page),
-// which links to the credible live report instead.
+// but this legacy /b endpoint still responds — same source the footer badge
+// and /impact page display, so it only updates whenever they next recrawl.
 async function fetchGramsPerView(): Promise<number> {
 	const response = await fetch(`https://api.websitecarbon.com/b?url=${encodeURIComponent(MEASURED_URL)}`);
 	if (!response.ok) {
