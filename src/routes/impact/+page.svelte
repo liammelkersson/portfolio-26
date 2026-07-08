@@ -94,8 +94,8 @@
 				<p class="text-base opacity-60">Progress to next tree</p>
 				<div class="mt-2 h-2 w-full rounded-full bg-neutral-200 dark:bg-neutral-800">
 					<div
-						class="h-2 rounded-full bg-current"
-						style="width: {(progressToNextTree ?? 0) * 100}%"
+						class="h-2 rounded-full"
+						style="width: {(progressToNextTree ?? 0) * 100}%; background-color: #34C759"
 					></div>
 				</div>
 			</div>
