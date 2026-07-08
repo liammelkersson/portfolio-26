@@ -2,6 +2,7 @@ import type { Config } from '@netlify/functions';
 import { getStore } from '@netlify/blobs';
 import { getCounterCount } from '../../src/lib/impact/counterApi';
 import { fetchTreesPlanted } from '../../src/lib/impact/ecologiReporting';
+import { fetchGco2eForBytes } from '../../src/lib/impact/websiteCarbonData';
 import { treesOwed } from '../../src/lib/impact/treesOwed';
 import { monthKey } from '../../src/lib/impact/monthKey';
 import {
@@ -9,22 +10,24 @@ import {
 	shouldPurchaseTree,
 	type PurchaseState
 } from '../../src/lib/impact/purchaseDecision';
-import { VISITS_COUNTER, GRAMS_PER_TREE, MEASURED_URL } from '../../src/lib/impact/config';
+import {
+	VISITS_COUNTER,
+	GRAMS_PER_TREE,
+	IS_GREEN_HOSTED,
+	PAGE_WEIGHT_STORE,
+	PAGE_WEIGHT_KEY
+} from '../../src/lib/impact/config';
 
 const ECOLOGI_PURCHASE_ENDPOINT = 'https://public.ecologi.com/impact/trees';
-const PURCHASE_STATE_STORE = 'impact';
 const PURCHASE_STATE_KEY = 'purchase-state';
 
-async function fetchGramsPerView(): Promise<number> {
-	const response = await fetch(`https://api.websitecarbon.com/b?url=${encodeURIComponent(MEASURED_URL)}`);
-	if (!response.ok) {
-		throw new Error(`websitecarbon request failed: ${response.status}`);
-	}
-	const data = await response.json();
-	if (typeof data.c !== 'number') {
-		throw new Error('unexpected websitecarbon response shape');
-	}
-	return data.c;
+type PageWeight = { bytes: number };
+
+async function fetchGramsPerView(store: ReturnType<typeof getStore>): Promise<number | null> {
+	const weight = (await store.get(PAGE_WEIGHT_KEY, { type: 'json' })) as PageWeight | null;
+	if (!weight) return null;
+	const data = await fetchGco2eForBytes(weight.bytes, IS_GREEN_HOSTED);
+	return data.gco2e;
 }
 
 async function purchaseTree(apiKey: string, idempotencyKey: string): Promise<void> {
@@ -54,11 +57,18 @@ export default async () => {
 			return new Response('not configured', { status: 200 });
 		}
 
+		const store = getStore(PAGE_WEIGHT_STORE);
+
 		const [visits, treesPurchased, gramsPerView] = await Promise.all([
 			getCounterCount(VISITS_COUNTER),
 			fetchTreesPlanted(username),
-			fetchGramsPerView()
+			fetchGramsPerView(store)
 		]);
+
+		if (gramsPerView === null) {
+			console.log('check-tree-offset: no page weight reported yet, skipping run');
+			return new Response('page weight not reported', { status: 200 });
+		}
 
 		const owed = treesOwed(visits * gramsPerView, treesPurchased, GRAMS_PER_TREE);
 		if (owed < 1) {
@@ -66,7 +76,6 @@ export default async () => {
 			return new Response('no trees owed', { status: 200 });
 		}
 
-		const store = getStore(PURCHASE_STATE_STORE);
 		const state = (await store.get(PURCHASE_STATE_KEY, { type: 'json' })) as PurchaseState | null;
 		const currentMonth = monthKey(new Date());
 		const purchasesThisMonth = purchasesThisMonthCount(state, currentMonth);

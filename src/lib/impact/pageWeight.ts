@@ -1,3 +1,5 @@
+import { REPORT_PAGE_WEIGHT_PATH } from './config';
+
 const BYTES_CACHE_KEY = 'homepage-bytes';
 
 // Only the homepage's weight is measured — it's the canonical "this website
@@ -17,6 +19,13 @@ export function recordHomepageWeight(): void {
 		const totalBytes = resourceBytes + (navigationEntry?.transferSize ?? 0);
 		if (totalBytes > 0) {
 			localStorage.setItem(BYTES_CACHE_KEY, String(Math.round(totalBytes)));
+			// Best-effort: lets the server-side offset check use real page weight
+			// too, instead of Website Carbon's now-deprecated crawl API.
+			fetch(REPORT_PAGE_WEIGHT_PATH, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ bytes: Math.round(totalBytes) })
+			}).catch(() => {});
 		}
 	});
 }
