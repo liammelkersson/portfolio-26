@@ -9,7 +9,7 @@
 
 <footer
 	{@attach reveal()}
-	class="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-y-3 px-6 pb-12"
+	class="mx-auto flex w-full max-w-3xl flex-wrap items-center justify-between gap-y-3 px-6 pb-12"
 >
 	<p class="order-1 text-sm whitespace-nowrap opacity-60">© {year} Liam Melkersson</p>
 	{#if showCarbonBadge}
