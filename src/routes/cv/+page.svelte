@@ -36,6 +36,14 @@
 			description: 'Teaching assistant for the course Web & User Interface Design.'
 		}
 	];
+
+	const awards = [
+		{ label: 'Stiftelsen Bengt Claessons Minne (Scholarship)', year: '2024' },
+		{ label: 'Scholarship For Helping Students With Math (Mattestöd)', year: null },
+		{ label: '3rd Place, Graphical Profile of the Year', year: null },
+		{ label: 'Stiftelsen Jönköpings Borgarekassa and Bjuggska Fonden (Scholarship)', year: null },
+		{ label: 'Stiftelsen Bengt Claessons Minne (Scholarship)', year: '2021' }
+	];
 </script>
 
 <svelte:head>
@@ -99,7 +107,7 @@
 		</ul>
 	</section>
 
-	<section {@attach reveal()}>
+	<section {@attach reveal()} class="mb-16">
 		<h2
 			class="mb-6 text-xs font-normal tracking-[0.2em] text-neutral-500 uppercase dark:text-neutral-400"
 		>
@@ -110,6 +118,36 @@
 			<p class="text-sm text-neutral-500 dark:text-neutral-400">Aug 2022 – May 2025</p>
 		</div>
 		<p class="mt-1 text-neutral-700 dark:text-neutral-300">Jönköping University</p>
+	</section>
+
+	<section {@attach reveal()} class="mb-16">
+		<h2
+			class="mb-6 text-xs font-normal tracking-[0.2em] text-neutral-500 uppercase dark:text-neutral-400"
+		>
+			Awards
+		</h2>
+		<ul class="space-y-2">
+			{#each awards as award (award.label + award.year)}
+				<li class="flex flex-wrap items-baseline justify-between gap-x-4">
+					<p class="text-neutral-700 dark:text-neutral-300">{award.label}</p>
+					{#if award.year}
+						<p class="text-sm text-neutral-500 dark:text-neutral-400">{award.year}</p>
+					{/if}
+				</li>
+			{/each}
+		</ul>
+	</section>
+
+	<section {@attach reveal()}>
+		<h2
+			class="mb-6 text-xs font-normal tracking-[0.2em] text-neutral-500 uppercase dark:text-neutral-400"
+		>
+			Publications
+		</h2>
+		<p class="text-neutral-700 dark:text-neutral-300">
+			"Is Your Car Display Just a Big Phone?: Evaluating the Safety of Smartphones vs. Built-In
+			Car Interfaces in the Context of Driver Distraction"
+		</p>
 	</section>
 </main>
 <Footer />
