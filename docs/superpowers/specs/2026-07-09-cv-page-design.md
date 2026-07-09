@@ -39,7 +39,7 @@ No skills section, no PDF download/print view — on-site page only.
 
 ## SEO
 
-- `<title>`: "Liam Melkersson — CV"
+- `<title>`: "CV — Liam Melkersson" (topic-first, matching site convention — see `/impact`'s "Carbon impact — Liam Melkersson")
 - Meta description summarizing the page
 - `<link rel="canonical" href="https://liammelkersson.xyz/cv" />`
 - Reuse the `Person` schema pattern from the homepage if it fits naturally; not required.
