@@ -17,7 +17,10 @@
 	});
 </script>
 
-<a href="/impact" class="text-xs opacity-60 transition-opacity hover:opacity-100">
+<a
+	href="/impact"
+	class="text-sm underline underline-offset-2 opacity-60 transition-colors hover:text-[#34C759] hover:opacity-100"
+>
 	{#if result}
 		{result.c}g CO₂/view · cleaner than {result.p}% of pages
 	{:else if failed}

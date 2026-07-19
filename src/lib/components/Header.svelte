@@ -6,7 +6,6 @@
 	<nav class="flex items-center gap-6 text-sm">
 		<a href="/" class="opacity-60 transition-opacity hover:opacity-100">Home</a>
 		<a href="/impact" class="opacity-60 transition-opacity hover:opacity-100">Impact</a>
-		<a href="/cv" class="opacity-60 transition-opacity hover:opacity-100">CV</a>
 		<ThemeToggle />
 	</nav>
 	<a

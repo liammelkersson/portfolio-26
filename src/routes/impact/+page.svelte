@@ -143,7 +143,7 @@
 				</p>
 				<p class="mt-2 text-5xl font-semibold">
 					{#if totalKg !== null}
-						<CountUp value={totalKg} decimals={2} />kg
+						<CountUp value={totalKg} decimals={5} />kg
 					{:else}
 						—
 					{/if}
