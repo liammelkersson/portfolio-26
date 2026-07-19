@@ -3,4 +3,3 @@
 
   [plugins.inputs]
     checkPaths = ["/"]
-    timeout = 60000
