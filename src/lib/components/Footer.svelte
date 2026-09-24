@@ -13,7 +13,7 @@
 			href: 'https://cleancreatives.org',
 			width: 48,
 			height: 48,
-			imageClass: 'h-9 w-9 invert dark:invert-0'
+			imageClass: 'h-9 w-9 max-w-none object-contain invert dark:invert-0'
 		},
 		{
 			src: '/badges/giving-1-to-humanity.svg',
@@ -21,7 +21,7 @@
 			href: '',
 			width: 45,
 			height: 48,
-			imageClass: 'h-9 w-auto invert dark:invert-0'
+			imageClass: 'h-9 w-auto max-w-none object-contain invert dark:invert-0'
 		},
 		{
 			src: '/badges/hjarnfonden.svg',
@@ -29,7 +29,7 @@
 			href: 'https://www.hjarnfonden.se',
 			width: 192,
 			height: 20,
-			imageClass: 'h-4 w-auto dark:invert'
+			imageClass: 'h-4 w-auto max-w-none object-contain dark:invert'
 		},
 		{
 			src: '/badges/ace.webp',
@@ -37,7 +37,7 @@
 			href: 'https://animalcharityevaluators.org',
 			width: 211,
 			height: 48,
-			imageClass: 'h-6 w-auto dark:brightness-0 dark:invert'
+			imageClass: 'h-6 w-auto max-w-none object-contain dark:brightness-0 dark:invert'
 		}
 	];
 </script>
@@ -56,9 +56,9 @@
 	>
 		111 <span style="font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif">♡</span> 222
 	</p>
-	<ul class="order-4 flex w-full items-center justify-center gap-8 opacity-60 grayscale">
+	<ul class="order-4 flex w-full flex-wrap items-center justify-center gap-x-8 gap-y-4 opacity-60 grayscale">
 		{#each supportBadges as badge (badge.alt)}
-			<li>
+			<li class="shrink-0">
 				{#snippet badgeImage()}
 					<img
 						src={badge.src}
