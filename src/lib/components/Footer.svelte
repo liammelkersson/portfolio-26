@@ -24,7 +24,7 @@
 			imageClass: 'h-9 w-auto max-w-none object-contain invert dark:invert-0'
 		},
 		{
-			src: '/badges/hjarnfonden.svg',
+			src: '/badges/hjarnfonden-jag-stodjer.svg',
 			alt: 'Hjärnfonden Jag Stödjer',
 			href: 'https://www.hjarnfonden.se',
 			width: 192,
