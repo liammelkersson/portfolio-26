@@ -7,3 +7,4 @@
 # Friendly paths for Netlify Functions
 /api/visit-counter /.netlify/functions/visit-counter 200
 /api/report-carbon-stats /.netlify/functions/report-carbon-stats 200
+/api/west-ham-result /.netlify/functions/west-ham-result 200

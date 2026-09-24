@@ -1,21 +1,12 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import VinylRack from '$lib/components/VinylRack.svelte';
+	import CurrentlyReading from '$lib/components/CurrentlyReading.svelte';
+	import Passport from '$lib/components/Passport.svelte';
 	import { reveal } from '$lib/attachments/reveal';
+	import { funFacts } from '$lib/data/funFacts';
+	import { pickDifferentIndex } from '$lib/data/pickDifferentIndex';
 
-	const funFacts = [
-		'My favorite movie is Good Will Hunting (1997), closely followed by The Green Mile (1999).',
-		'When I was younger I wanted to be an architect.',
-		"In 2024 I went to London and saw West Ham come back against Luton (3-1, David Moyes' last home game).",
-		'I can do a handstand pretty well.',
-		'Since going vegan, my favorite restaurant is probably Mahalo in Stockholm.',
-		'I collect vinyl (as shown above) and have over 90 records.',
-		'My favorite animes are One Piece, Attack on Titan and Elfen Lied.',
-		'My favorite color is green. More specifically #466D44.',
-		'My favorite book ever is The Stranger by Albert Camus.',
-		'My favorite F1 driver is Oscar Piastri.',
-		'My favorite wine is Cabernet Sauvignon.'
-	];
 
 	const pipLayouts: Record<number, Array<{ cx: number; cy: number }>> = {
 		1: [{ cx: 12, cy: 12 }],
@@ -53,7 +44,8 @@
 
 	const hexColorPattern = /(#[0-9a-fA-F]{6})\b/;
 
-	let currentFact: string | null = $state(null);
+	let currentFactIndex: number | null = $state(null);
+	const currentFact = $derived(currentFactIndex === null ? null : funFacts[currentFactIndex]);
 	let diceFace = $state(5);
 	let rollCount = $state(0);
 
@@ -64,15 +56,11 @@
 	}
 
 	function rollFunFact() {
-		let nextFact = currentFact;
-		while (nextFact === currentFact) {
-			nextFact = funFacts[Math.floor(Math.random() * funFacts.length)];
-		}
 		let nextFace = diceFace;
 		while (nextFace === diceFace) {
 			nextFace = Math.floor(Math.random() * 6) + 1;
 		}
-		currentFact = nextFact;
+		currentFactIndex = pickDifferentIndex(funFacts.length, currentFactIndex);
 		diceFace = nextFace;
 		rollCount += 1;
 	}
@@ -89,6 +77,11 @@
 				'<circle cx="7" cy="18" r="2.5" /><path d="M9.5 18V5.5L19 4v11" /><circle cx="16.5" cy="15" r="2.5" />'
 		},
 		{
+			label: 'Bouldering',
+			iconPath:
+				'<path d="M2 17.5C2 15.5 5 14 8 13.5l5-4h5.5c2 0 3 1.5 3 3.5v4c0 1.5-1 2-2.5 2-4.5 0-9-1-13.5.2C3.5 19.7 2 19 2 17.5z" /><path d="M10.5 11.5l3.2 3.2" /><path d="M13.5 9.5l3 3" /><path d="M18.5 9.5l.5-2.5" /><path d="M2.4 16.3c3 .2 5.6-.6 7.6-2.1" />'
+		},
+		{
 			label: 'Running',
 			iconPath:
 				'<g stroke-width="2"><circle cx="14.8" cy="4.2" r="1.9" fill="currentColor" stroke="none" /><path d="M13.8 7.5 11.8 12.5" /><path d="M13.8 7.5l3.4 1.7 2.3-.6" /><path d="M13.8 7.5 10 8.7 8.2 11" /><path d="M11.8 12.5l3 2.5-.7 4.5" /><path d="M11.8 12.5l-3.3 2.8-3.3.5" /></g>'
@@ -102,11 +95,6 @@
 			label: 'Formula One',
 			iconPath:
 				'<path fill="currentColor" stroke="none" d="M9.6 11.24h7.91L19.75 9H9.39c-2.85 0-3.62.34-5.17 1.81C2.71 12.3 0 15 0 15h3.38c.77-.75 2.2-2.13 2.85-2.75.92-.87 1.37-1.01 3.37-1.01zM20.39 9l-6 6H18l6-6h-3.61zm-3.25 2.61H9.88c-2.22 0-2.6.12-3.55 1.07C5.44 13.57 4 15 4 15h3.15l.75-.75c.49-.49.75-.55 1.78-.55h5.37l2.09-2.09z" />'
-		},
-		{
-			label: 'Plants',
-			iconPath:
-				'<path d="M12 13V8.5" /><path d="M12 10.5C12 7.5 9.8 5 6.8 5c0 3 2.2 5.5 5.2 5.5z" /><path d="M12 8.5c0-3 2.2-5.5 5.2-5.5 0 3-2.2 5.5-5.2 5.5z" /><path d="M7 13h10l-1 6.2a1.5 1.5 0 0 1-1.5 1.3h-5a1.5 1.5 0 0 1-1.5-1.3z" />'
 		}
 	];
 
@@ -142,6 +130,12 @@
 			</li>
 		{/each}
 		</ul>
+	</div>
+	<div {@attach reveal(155)} class="mb-6">
+		<CurrentlyReading />
+	</div>
+	<div {@attach reveal(160)} class="mb-8">
+		<Passport />
 	</div>
 	<div
 		{@attach reveal(170)}
@@ -195,6 +189,12 @@
 			{/key}
 		</div>
 	</div>
+	<a
+		href="/personal"
+		class="mt-8 inline-block text-sm text-neutral-500 underline underline-offset-2 transition-colors hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200"
+	>
+		See my desk →
+	</a>
 </section>
 
 <style>

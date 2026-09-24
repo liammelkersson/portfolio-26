@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build",
+		"build": "vite build && node scripts/inline-script-csp.js",
 		"preview": "vite preview",
 		"test": "vitest run",
 		"prepare": "svelte-kit sync || echo ''",
@@ -26,5 +26,8 @@
 		"typescript": "^6.0.3",
 		"vite": "^8.0.16",
 		"vitest": "^4.1.10"
+	},
+	"dependencies": {
+		"motion": "^13.0.0"
 	}
 }

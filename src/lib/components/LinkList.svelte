@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { pressScale } from '$lib/attachments/pressScale';
+	import { iconSwap } from '$lib/attachments/iconSwap';
+
 	type LinkRow = { label: string; href: string; icon: string };
 
 	let { links }: { links: LinkRow[] } = $props();
@@ -43,10 +46,15 @@
 					onclick={() => copyEmailAddress(link)}
 					aria-label="Copy {link.href.replace('mailto:', '')}"
 					class="group -mx-3 flex w-[calc(100%+1.5rem)] cursor-pointer items-center gap-4 rounded-xl px-3 py-3 transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-800/60"
+					{@attach pressScale()}
 				>
 					{@render rowBody(link)}
-					{#if copiedLabel === link.label}
+					<span
+						class="relative h-4 w-4 shrink-0"
+						{@attach iconSwap(copiedLabel === link.label ? 'check' : 'copy')}
+					>
 						<svg
+							data-icon="check"
 							viewBox="0 0 24 24"
 							fill="none"
 							stroke="currentColor"
@@ -54,12 +62,12 @@
 							stroke-linecap="round"
 							stroke-linejoin="round"
 							aria-hidden="true"
-							class="h-4 w-4 shrink-0 text-green-600 dark:text-green-500"
+							class="absolute inset-0 h-4 w-4 text-green-600 dark:text-green-500"
 						>
 							<path d="m5 13 4 4L19 7" />
 						</svg>
-					{:else}
 						<svg
+							data-icon="copy"
 							viewBox="0 0 24 24"
 							fill="none"
 							stroke="currentColor"
@@ -67,12 +75,12 @@
 							stroke-linecap="round"
 							stroke-linejoin="round"
 							aria-hidden="true"
-							class="h-4 w-4 shrink-0 opacity-30 transition-opacity group-hover:opacity-100"
+							class="absolute inset-0 h-4 w-4"
 						>
 							<rect x="9" y="9" width="12" height="12" rx="2" />
 							<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
 						</svg>
-					{/if}
+					</span>
 				</button>
 			{:else}
 				<a
@@ -80,6 +88,7 @@
 					target="_blank"
 					rel="noopener noreferrer"
 					class="group -mx-3 flex items-center gap-4 rounded-xl px-3 py-3 transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-800/60"
+					{@attach pressScale()}
 				>
 					{@render rowBody(link)}
 					<svg

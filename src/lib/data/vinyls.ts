@@ -3,6 +3,9 @@ export interface Vinyl {
 	artist: string;
 	coverUrl: string;
 	spotifyUrl: string;
+	nowPlaying?: boolean;
+	note?: string;
+	discogsUrl?: string;
 }
 
 export const vinyls: Vinyl[] = [
@@ -10,7 +13,8 @@ export const vinyls: Vinyl[] = [
 		title: 'Blonde',
 		artist: 'Frank Ocean',
 		coverUrl: '/vinyls/blonde.webp',
-		spotifyUrl: 'https://open.spotify.com/album/3mH6qwIy9crq0I9YQbOuDf'
+		spotifyUrl: 'https://open.spotify.com/album/3mH6qwIy9crq0I9YQbOuDf',
+		nowPlaying: true
 	},
 	{
 		title: 'Blush',

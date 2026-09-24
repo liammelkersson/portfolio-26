@@ -2,6 +2,7 @@
 	import { crossfade, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import { vinyls } from '$lib/data/vinyls';
+	import { nearViewport } from '$lib/attachments/nearViewport';
 
 	// Fallback plays when a send has no matching receive (e.g. the panel cover
 	// on close): slide left toward the shelf and fade, instead of flying to a
@@ -22,6 +23,10 @@
 		vinyls.length >= minShelfSize
 			? vinyls
 			: Array.from({ length: minShelfSize }, (_, index) => vinyls[index % vinyls.length]);
+
+	// Spine backgrounds ignore loading="lazy", so covers get no URL until the
+	// shelf approaches the viewport
+	let coversRequested = $state(false);
 
 	let selectedIndex: number | null = $state(null);
 	const selectedVinyl = $derived(selectedIndex === null ? null : shelfVinyls[selectedIndex]);
@@ -48,7 +53,10 @@
 </script>
 
 <div class="flex flex-col gap-6 sm:flex-row sm:items-end">
-	<div class="shelf-scroll min-w-0 flex-1 overflow-x-auto pt-4">
+	<div
+		class="shelf-scroll min-w-0 flex-1 overflow-x-auto pt-4"
+		{@attach nearViewport(() => (coversRequested = true))}
+	>
 		<ul class="flex w-max items-end pr-40 pl-4">
 		{#each shelfVinyls as vinyl, index (index)}
 			<li class="vinyl-slot relative shrink-0" class:z-10={selectedIndex === index}>
@@ -65,10 +73,10 @@
 						<span
 							aria-hidden="true"
 							class="vinyl-spine"
-							style="background-image: url({vinyl.coverUrl})"
+							style={coversRequested ? `background-image: url(${vinyl.coverUrl})` : undefined}
 						></span>
 						<img
-							src={vinyl.coverUrl}
+							src={coversRequested ? vinyl.coverUrl : undefined}
 							alt="{vinyl.title} album cover"
 							width="160"
 							height="160"

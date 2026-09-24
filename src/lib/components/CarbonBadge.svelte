@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { fetchCarbonStats, type CarbonStats } from '$lib/impact/websiteCarbon';
 
+	let { onOpenImpact }: { onOpenImpact?: () => void } = $props();
+
 	let result = $state<CarbonStats | null>(null);
 	let failed = $state(false);
 
@@ -15,10 +17,17 @@
 			});
 		return () => controller.abort();
 	});
+
+	function openImpactInPlace(event: MouseEvent) {
+		if (!onOpenImpact) return;
+		event.preventDefault();
+		onOpenImpact();
+	}
 </script>
 
 <a
 	href="/impact"
+	onclick={openImpactInPlace}
 	class="text-sm underline underline-offset-2 opacity-60 transition-colors hover:text-[#34C759] hover:opacity-100"
 >
 	{#if result}

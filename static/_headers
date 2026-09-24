@@ -1,4 +1,16 @@
+/_app/immutable/*
+  Cache-Control: public, max-age=31536000, immutable
+
 /vinyls/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/books/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/hero/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/stamps/*
   Cache-Control: public, max-age=31536000, immutable
 
 /fonts/*
@@ -10,6 +22,18 @@
 /logos/*
   Cache-Control: public, max-age=31536000, immutable
 
+/movies/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/playlists/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/timeline/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/travel/*
+  Cache-Control: public, max-age=31536000, immutable
+
 /projects/*
   Cache-Control: public, max-age=604800
 
@@ -18,5 +42,5 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
-  Strict-Transport-Security: max-age=31536000; includeSubDomains
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.websitecarbon.com https://public.ecologi.com; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Content-Security-Policy: default-src 'self'; script-src 'self' __INLINE_SCRIPT_HASHES__; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.websitecarbon.com https://public.ecologi.com; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'

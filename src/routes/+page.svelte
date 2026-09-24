@@ -57,7 +57,7 @@
 	{@html `<script type="application/ld+json">${JSON.stringify(personSchema)}</script>`}
 </svelte:head>
 
-<Header />
+<Header tone="overImage" />
 <main>
 	<Hero />
 	<ProjectGrid />

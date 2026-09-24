@@ -1,0 +1,4 @@
+Contact: mailto:liammelkersson@live.se
+Expires: 2027-09-23T00:00:00.000Z
+Preferred-Languages: en, sv
+Canonical: https://liammelkersson.xyz/.well-known/security.txt
