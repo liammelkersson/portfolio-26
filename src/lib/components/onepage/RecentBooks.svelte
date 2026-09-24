@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {
-		booksOnShelf,
+		recentBooks,
 		readingList,
 		READING_LIST_UPDATED_ON,
 		type Book
@@ -12,7 +12,7 @@
 
 	const MARGINS_PROFILE_URL = 'https://margins.app/u/89b2e8838d1248fdacf0d1ebb7b1db1d';
 
-	const books = booksOnShelf(readingList);
+	const books = recentBooks(readingList);
 
 	function isBeingRead(book: Book) {
 		return book === readingList.current;
@@ -28,7 +28,7 @@
 			<li class="text-sm">
 				<div class="relative">
 					<MediaCover
-						src={book.coverUrl ?? book.thumbnailUrl}
+						src={book.coverUrl}
 						alt="{book.title} cover"
 						fallbackTitle={book.title}
 					/>

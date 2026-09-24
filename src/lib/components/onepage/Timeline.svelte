@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { projects } from '$lib/data/projects';
 	import { experience } from '$lib/data/experience';
-	import { multiYearSpanLabel, timelineGroups, withStartYear } from '$lib/data/timeline';
+	import { multiYearSpanLabel, timelineGroups } from '$lib/data/timeline';
 
-	const groups = timelineGroups([...withStartYear(projects), ...experience]);
+	const groups = timelineGroups([...projects, ...experience]);
 </script>
 
 <details class="group py-8">

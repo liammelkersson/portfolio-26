@@ -2,22 +2,11 @@
 	import { reveal } from '$lib/attachments/reveal';
 	import CarbonBadge from '$lib/components/CarbonBadge.svelte';
 
-	let {
-		showCarbonBadge = true,
-		onOpenImpact
-	}: { showCarbonBadge?: boolean; onOpenImpact?: () => void } = $props();
+	let { onOpenImpact }: { onOpenImpact: () => void } = $props();
 
 	const year = new Date().getFullYear();
 
 	const supportBadges = [
-		{
-			src: '/badges/giving-1-to-humanity.svg',
-			alt: 'Giving 1% to Humanity',
-			href: '',
-			width: 45,
-			height: 48,
-			imageClass: 'h-9 w-auto invert dark:invert-0'
-		},
 		{
 			src: '/badges/clean-creatives.avif',
 			alt: 'Clean Creatives pledge signatory',
@@ -25,6 +14,14 @@
 			width: 48,
 			height: 48,
 			imageClass: 'h-9 w-9 invert dark:invert-0'
+		},
+		{
+			src: '/badges/giving-1-to-humanity.svg',
+			alt: 'Giving 1% to Humanity',
+			href: '',
+			width: 45,
+			height: 48,
+			imageClass: 'h-9 w-auto invert dark:invert-0'
 		},
 		{
 			src: '/badges/hjarnfonden.svg',
@@ -50,11 +47,9 @@
 	class="mx-auto flex w-full max-w-3xl flex-wrap items-center justify-between gap-y-3 px-6 pb-12"
 >
 	<p class="order-1 text-sm whitespace-nowrap opacity-60">© {year} Liam Melkersson</p>
-	{#if showCarbonBadge}
-		<div class="order-3 w-full sm:order-2 sm:w-auto">
-			<CarbonBadge {onOpenImpact} />
-		</div>
-	{/if}
+	<div class="order-3 w-full sm:order-2 sm:w-auto">
+		<CarbonBadge {onOpenImpact} />
+	</div>
 	<p
 		class="order-2 text-sm whitespace-nowrap opacity-60 sm:order-3"
 		style="font-family: 'Times New Roman', Times, serif"

@@ -1,13 +1,7 @@
 /_app/immutable/*
   Cache-Control: public, max-age=31536000, immutable
 
-/vinyls/*
-  Cache-Control: public, max-age=31536000, immutable
-
 /books/*
-  Cache-Control: public, max-age=31536000, immutable
-
-/hero/*
   Cache-Control: public, max-age=31536000, immutable
 
 /stamps/*
@@ -19,9 +13,6 @@
 /icons/*
   Cache-Control: public, max-age=31536000, immutable
 
-/logos/*
-  Cache-Control: public, max-age=31536000, immutable
-
 /movies/*
   Cache-Control: public, max-age=31536000, immutable
 
@@ -31,11 +22,14 @@
 /timeline/*
   Cache-Control: public, max-age=31536000, immutable
 
-/travel/*
+/tattoos/*
   Cache-Control: public, max-age=31536000, immutable
 
-/projects/*
+/badges/*
   Cache-Control: public, max-age=604800
+
+/travel/*
+  Cache-Control: public, max-age=31536000, immutable
 
 /*
   X-Frame-Options: DENY

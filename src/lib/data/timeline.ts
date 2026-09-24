@@ -17,12 +17,6 @@ export interface TimelineGroup<Entry extends TimelineEntry> {
 
 const CURRENT_GROUP_LABEL = 'now';
 
-type WithStartYear<Item> = Item & { startYear: number };
-
-export function withStartYear<Item extends { startYear?: number }>(items: Item[]): WithStartYear<Item>[] {
-	return items.filter((item): item is WithStartYear<Item> => item.startYear !== undefined);
-}
-
 function isCurrent(entry: TimelineEntry) {
 	return entry.ongoing === true;
 }

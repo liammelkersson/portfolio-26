@@ -14,7 +14,7 @@
 
 <TattooBackground />
 
-<main class="mx-auto flex min-h-screen w-full max-w-xl flex-col justify-center px-6 py-16">
+<main class="mx-auto flex min-h-screen w-full max-w-[40rem] flex-col justify-center px-6 py-16">
 	<p class="text-sm tracking-[0.08em] tabular-nums opacity-40">{page.status}</p>
 	<h1 class="mt-3 text-2xl font-normal">
 		{notFound ? 'this page doesn’t exist' : 'something broke'}
