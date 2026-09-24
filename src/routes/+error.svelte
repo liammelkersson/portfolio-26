@@ -14,23 +14,33 @@
 
 <TattooBackground />
 
-<main class="mx-auto flex min-h-screen w-full max-w-[40rem] flex-col justify-center px-6 py-16">
-	<p class="text-sm tracking-[0.08em] tabular-nums opacity-40">{page.status}</p>
-	<h1 class="mt-3 text-2xl font-normal">
-		{notFound ? 'this page doesn’t exist' : 'something broke'}
-	</h1>
-	<p class="mt-3 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
-		{#if notFound}
-			maybe it moved, maybe it never did. either way, nothing lives here.
-		{:else}
+<main class="mx-auto flex min-h-screen w-full max-w-[40rem] flex-col items-center justify-center px-6 py-16 text-center">
+	{#if notFound}
+		<video
+			autoplay
+			muted
+			loop
+			playsinline
+			poster="/404/speed-poster.webp"
+			width="498"
+			height="324"
+			aria-label="IShowSpeed closing his eyes, unimpressed"
+			class="w-full max-w-sm rounded-sm"
+		>
+			<source src="/404/speed-fast.webm" type="video/webm" />
+			<source src="/404/speed-fast.mp4" type="video/mp4" />
+		</video>
+		<h1 class="mt-6 text-2xl font-normal tabular-nums">404</h1>
+	{:else}
+		<p class="text-sm tracking-[0.08em] tabular-nums opacity-40">{page.status}</p>
+		<h1 class="mt-3 text-2xl font-normal">something broke</h1>
+		<p class="mt-3 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
 			{page.error?.message ?? 'an unexpected error happened on my end.'}
-		{/if}
-	</p>
+		</p>
+	{/if}
 	<a
 		href="/"
-		class="mt-8 inline-flex w-fit items-center gap-2 text-sm opacity-60 transition-opacity hover:opacity-100"
+		class="mt-3 w-fit text-sm underline underline-offset-2 opacity-60 transition-opacity hover:opacity-100"
+		>back home</a
 	>
-		<span aria-hidden="true">←</span>
-		<span class="underline underline-offset-2">back home</span>
-	</a>
 </main>

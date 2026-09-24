@@ -11,6 +11,7 @@
 	import DesignerWord from '$lib/components/onepage/DesignerWord.svelte';
 	import TattooBackground from '$lib/components/onepage/TattooBackground.svelte';
 	import WestHamResult from '$lib/components/onepage/WestHamResult.svelte';
+	import HobbyWord from '$lib/components/onepage/HobbyWord.svelte';
 
 	let impactDialog: ImpactDialog;
 
@@ -65,8 +66,9 @@
 	<header class="mb-10 flex items-start justify-between gap-6">
 		<div>
 			<h1 class="text-2xl font-normal">Liam Melkersson</h1>
+			<p class="mt-3 font-inter text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">yo!</p>
 			<p class="mt-3 font-inter text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
-				yo! this website is just for myself to compile a lot of things i enjoy and also some
+				this website is just for myself to compile a lot of things i enjoy and also some
 				work/portfolio stuff. im working as a <DesignerWord />, doing websites,
 				apps, brands and other digital design stuff. ive worked with design and development for
 				years.
@@ -78,7 +80,7 @@
 				>
 			</p>
 			<p class="mt-3 font-inter text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
-				outside of all of that i like bouldering, running and going to concerts. oh and also the
+				outside of all of that i like <HobbyWord hobby="climbing" />, <HobbyWord hobby="running" /> and going to <HobbyWord hobby="concerts" />. oh and also the
 				football team i support is west ham<WestHamResult />
 			</p>
 		</div>
