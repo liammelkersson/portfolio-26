@@ -70,14 +70,7 @@
 			<p class="mt-3 font-inter text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
 				this website is just for myself to compile a lot of things i enjoy and also some
 				work/portfolio stuff. im working as a <DesignerWord />, doing websites,
-				apps, brands and other digital design stuff. ive worked with design and development for
-				years.
-			</p>
-			<p class="mt-3 font-inter text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
-				design motto:
-				<q class="font-indie-flower text-base text-black dark:text-white"
-					>only thing that matters is how you make the user feel</q
-				>
+				apps, brands and other digital design stuff.
 			</p>
 			<p class="mt-3 font-inter text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
 				outside of all of that i like <HobbyWord hobby="climbing" />, <HobbyWord hobby="running" /> and going to <HobbyWord hobby="concerts" />. oh and also the
