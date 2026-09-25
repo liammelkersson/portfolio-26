@@ -8,6 +8,14 @@
 
 	const supportBadges = [
 		{
+			src: 'https://app.greenweb.org/api/v3/greencheckimage/liammelkersson.xyz?nocache=true',
+			alt: 'This website runs on green hosting - verified by thegreenwebfoundation.org',
+			href: 'https://www.thegreenwebfoundation.org',
+			width: 200,
+			height: 95,
+			imageClass: 'h-9 w-auto max-w-none object-contain'
+		},
+		{
 			src: '/badges/clean-creatives.avif',
 			alt: 'Clean Creatives pledge signatory',
 			href: 'https://cleancreatives.org',
