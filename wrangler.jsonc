@@ -1,0 +1,34 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "liammelkersson-xyz",
+	"main": "worker/index.ts",
+	"compatibility_date": "2026-09-01",
+	"assets": {
+		"directory": "./build",
+		"binding": "ASSETS",
+		"run_worker_first": [
+			"/api/*"
+		],
+		"not_found_handling": "404-page"
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "impact",
+			"database_id": "fac98538-0bbb-41f5-a334-5923a5d66f0a",
+			"migrations_dir": "migrations"
+		}
+	],
+	"triggers": {
+		"crons": [
+			"0 */6 * * *"
+		]
+	},
+	"vars": {
+		"PUBLIC_ECOLOGI_USERNAME": "liammelkersson",
+		"DRY_RUN": "true"
+	},
+	"observability": {
+		"enabled": true
+	}
+}

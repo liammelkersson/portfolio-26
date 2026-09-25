@@ -1,5 +1,3 @@
-export const LATEST_RESULT_PATH = '/api/west-ham-result';
-
 export const WEST_HAM_ESPN_TEAM_ID = '371';
 
 /** ESPN league slugs West Ham can play in; the latest finished match across all of them wins */

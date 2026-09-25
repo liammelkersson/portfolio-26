@@ -347,17 +347,17 @@ import { respondToCarbonStatsReport } from './carbonStatsRoute';
 import { runTreeOffsetCheck } from './treeOffsetJob';
 
 type WorkerEnv = Env & { ECOLOGI_API_KEY?: string };
-type ApiRoute = (request: Request, db: D1Database) => Promise<Response>;
+type ApiRoute = (request: Request, env: WorkerEnv) => Promise<Response>;
 
 const API_ROUTES = new Map<string, ApiRoute>([
-	[VISIT_COUNTER_PATH, respondToVisitCounter],
-	[REPORT_CARBON_STATS_PATH, respondToCarbonStatsReport]
+	[VISIT_COUNTER_PATH, (request, env) => respondToVisitCounter(request, env.DB)],
+	[REPORT_CARBON_STATS_PATH, (request, env) => respondToCarbonStatsReport(request, env.DB)]
 ]);
 
 export default {
 	fetch(request, env) {
 		const route = API_ROUTES.get(new URL(request.url).pathname);
-		return route ? route(request, env.DB) : env.ASSETS.fetch(request);
+		return route ? route(request, env) : env.ASSETS.fetch(request);
 	},
 	async scheduled(_controller, env, ctx) {
 		ctx.waitUntil(runTreeOffsetCheck(env));
@@ -365,9 +365,19 @@ export default {
 } satisfies ExportedHandler<WorkerEnv>;
 ```
 
+### 1.5b `west-ham-result` doesn't go in the Worker
+
+This function is missing above because it can't work the same way: `site.api.espn.com` returns `403 Access Denied` to Cloudflare Workers' egress IPs (verified with `wrangler dev`, which proxies outbound `fetch` like production — same class of block as the existing Website Carbon/Netlify workaround). Routing it through the Worker would just 502 in production.
+
+Fix: ESPN's API sends `access-control-allow-origin: *`, so the fetch moved to the browser instead, in `src/lib/football/latestResultClient.ts`. It now calls ESPN directly rather than a `/api/west-ham-result` endpoint. Two knock-on changes:
+
+- `static/_headers`: CSP `connect-src` gained `https://site.api.espn.com`, and `img-src` gained `https://a.espncdn.com` (the crest images are now referenced directly instead of inlined as base64 — the server-side `Buffer`-based inlining in `westHamResultSource.ts` was only there to satisfy the old `img-src 'self' data:'` policy).
+- `LATEST_RESULT_PATH`, the `vite dev` middleware in `vite.config.ts`, and `worker/westHamResultRoute.ts` are gone — nothing serves that path anymore, on any host.
+- `src/lib/football/westHamResultSource.ts` and `netlify/functions/west-ham-result.mts` are kept for now (same rollback-safety reason as the rest of `netlify/`), but nothing calls them post-migration.
+
 ### 1.6 Clean up the Netlify-specific files
 
-- `static/_redirects`: delete the two `/.netlify/functions/...` lines. Keep the four `301` redirects. Cloudflare supports the same syntax.
+- `static/_redirects`: delete the three `/.netlify/functions/...` lines (visit-counter, report-carbon-stats, west-ham-result). Keep the `301` redirects. Cloudflare supports the same syntax.
 - `static/_headers`: no change needed. Cloudflare static assets read it. The longest line after the CSP hashing step is about 720 characters, well under Cloudflare's 2,000-character limit, and the file has 10 rules (limit 100).
 - Delete `netlify/functions/` and remove `@netlify/blobs` and `@netlify/functions` from `package.json`. Do this **after** the cutover in Phase 4 works, so you can roll back.
 - Add `.wrangler` to `.gitignore`. It's already there.
