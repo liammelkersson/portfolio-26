@@ -1,5 +1,7 @@
 # Migrating liammelkersson.xyz from Netlify to Cloudflare
 
+**Status (2026-09-25): live on Cloudflare.** DNS cut over, site and `/api/*` routes verified against production, D1 seeded from the old Blobs data. `DRY_RUN` stays `true` until a cron run's been checked in the logs. Netlify kept as rollback for now — not yet deleted.
+
 Goal: host the site on a Green Web Foundation–verified provider for free, keeping every feature of the `/impact` page.
 
 ## Current state (checked 2026-09-24)
