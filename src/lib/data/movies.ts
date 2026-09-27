@@ -11,12 +11,19 @@ export interface Movie {
 export const IMDB_RATINGS_URL = 'https://www.imdb.com/user/p.m5offwgsw6skfk2i24rwgspupi/ratings/';
 
 /** ISO date, YYYY-MM-DD — bump when the list changes */
-export const MOVIES_UPDATED_ON = '2026-09-24';
+export const MOVIES_UPDATED_ON = '2026-09-27';
 
 const RECENT_MOVIE_COUNT = 10;
 
 /** Newest rating first */
 export const movies: Movie[] = [
+	{
+		title: 'Beautiful Boy',
+		year: 2018,
+		rating: 6,
+		imdbId: 'tt1226837',
+		posterUrl: '/movies/tt1226837.webp'
+	},
 	{
 		title: 'Killers of the Flower Moon',
 		year: 2023,
