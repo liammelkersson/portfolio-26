@@ -11,12 +11,54 @@ export interface Movie {
 export const IMDB_RATINGS_URL = 'https://www.imdb.com/user/p.m5offwgsw6skfk2i24rwgspupi/ratings/';
 
 /** ISO date, YYYY-MM-DD — bump when the list changes */
-export const MOVIES_UPDATED_ON = '2026-09-27';
+export const MOVIES_UPDATED_ON = '2026-10-25';
 
 const RECENT_MOVIE_COUNT = 10;
 
 /** Newest rating first */
 export const movies: Movie[] = [
+	{
+		title: 'Prisoners',
+		year: 2013,
+		rating: 7,
+		imdbId: 'tt1392214',
+		posterUrl: '/movies/tt1392214.webp'
+	},
+	{
+		title: 'Unabomber',
+		year: 2026,
+		rating: 3,
+		imdbId: 'tt6933238',
+		posterUrl: '/movies/tt6933238.webp'
+	},
+	{
+		title: 'Little Women',
+		year: 2019,
+		rating: 6,
+		imdbId: 'tt3281548',
+		posterUrl: '/movies/tt3281548.webp'
+	},
+	{
+		title: 'A Complete Unknown',
+		year: 2024,
+		rating: 6,
+		imdbId: 'tt11563598',
+		posterUrl: '/movies/tt11563598.webp'
+	},
+	{
+		title: 'The Prestige',
+		year: 2006,
+		rating: 7,
+		imdbId: 'tt0482571',
+		posterUrl: '/movies/tt0482571.webp'
+	},
+	{
+		title: 'The Brutalist',
+		year: 2024,
+		rating: 5,
+		imdbId: 'tt8999762',
+		posterUrl: '/movies/tt8999762.webp'
+	},
 	{
 		title: 'Beautiful Boy',
 		year: 2018,

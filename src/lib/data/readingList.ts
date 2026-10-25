@@ -10,7 +10,7 @@ export interface ReadingList {
 }
 
 /** ISO date, YYYY-MM-DD — bump when the list changes */
-export const READING_LIST_UPDATED_ON = '2026-09-24';
+export const READING_LIST_UPDATED_ON = '2026-10-25';
 
 export const readingList: ReadingList = {
 	current: {
@@ -19,6 +19,11 @@ export const readingList: ReadingList = {
 		coverUrl: '/books/the-count-of-monte-cristo-200.webp'
 	},
 	finished: [
+		{
+			title: 'Stoner',
+			author: 'John Williams',
+			coverUrl: '/books/stoner-nyrb-200.webp'
+		},
 		{
 			title: 'The Stranger',
 			author: 'Albert Camus',
