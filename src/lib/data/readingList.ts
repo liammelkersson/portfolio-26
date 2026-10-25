@@ -14,11 +14,16 @@ export const READING_LIST_UPDATED_ON = '2026-10-25';
 
 export const readingList: ReadingList = {
 	current: {
-		title: 'The Count of Monte Cristo',
-		author: 'Alexandre Dumas',
-		coverUrl: '/books/the-count-of-monte-cristo-200.webp'
+		title: 'East of Eden',
+		author: 'John Steinbeck',
+		coverUrl: '/books/east-of-eden-200.webp'
 	},
 	finished: [
+		{
+			title: 'The Count of Monte Cristo',
+			author: 'Alexandre Dumas',
+			coverUrl: '/books/the-count-of-monte-cristo-200.webp'
+		},
 		{
 			title: 'Stoner',
 			author: 'John Williams',

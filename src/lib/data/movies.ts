@@ -18,32 +18,11 @@ const RECENT_MOVIE_COUNT = 10;
 /** Newest rating first */
 export const movies: Movie[] = [
 	{
-		title: 'Prisoners',
-		year: 2013,
-		rating: 7,
-		imdbId: 'tt1392214',
-		posterUrl: '/movies/tt1392214.webp'
-	},
-	{
-		title: 'Unabomber',
-		year: 2026,
-		rating: 3,
-		imdbId: 'tt6933238',
-		posterUrl: '/movies/tt6933238.webp'
-	},
-	{
-		title: 'Little Women',
-		year: 2019,
-		rating: 6,
-		imdbId: 'tt3281548',
-		posterUrl: '/movies/tt3281548.webp'
-	},
-	{
-		title: 'A Complete Unknown',
+		title: 'The Brutalist',
 		year: 2024,
-		rating: 6,
-		imdbId: 'tt11563598',
-		posterUrl: '/movies/tt11563598.webp'
+		rating: 5,
+		imdbId: 'tt8999762',
+		posterUrl: '/movies/tt8999762.webp'
 	},
 	{
 		title: 'The Prestige',
@@ -53,11 +32,32 @@ export const movies: Movie[] = [
 		posterUrl: '/movies/tt0482571.webp'
 	},
 	{
-		title: 'The Brutalist',
+		title: 'A Complete Unknown',
 		year: 2024,
-		rating: 5,
-		imdbId: 'tt8999762',
-		posterUrl: '/movies/tt8999762.webp'
+		rating: 6,
+		imdbId: 'tt11563598',
+		posterUrl: '/movies/tt11563598.webp'
+	},
+	{
+		title: 'Little Women',
+		year: 2019,
+		rating: 6,
+		imdbId: 'tt3281548',
+		posterUrl: '/movies/tt3281548.webp'
+	},
+	{
+		title: 'Unabomber',
+		year: 2026,
+		rating: 3,
+		imdbId: 'tt6933238',
+		posterUrl: '/movies/tt6933238.webp'
+	},
+	{
+		title: 'Prisoners',
+		year: 2013,
+		rating: 7,
+		imdbId: 'tt1392214',
+		posterUrl: '/movies/tt1392214.webp'
 	},
 	{
 		title: 'Beautiful Boy',
