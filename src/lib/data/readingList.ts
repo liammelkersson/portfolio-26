@@ -5,7 +5,8 @@ export interface Book {
 }
 
 export interface ReadingList {
-	current: Book;
+	/** Books being read now, shown first */
+	current: Book[];
 	finished: Book[];
 }
 
@@ -13,17 +14,19 @@ export interface ReadingList {
 export const READING_LIST_UPDATED_ON = '2026-10-25';
 
 export const readingList: ReadingList = {
-	current: {
-		title: 'East of Eden',
-		author: 'John Steinbeck',
-		coverUrl: '/books/east-of-eden-200.webp'
-	},
-	finished: [
+	current: [
+		{
+			title: 'East of Eden',
+			author: 'John Steinbeck',
+			coverUrl: '/books/east-of-eden-200.webp'
+		},
 		{
 			title: 'The Count of Monte Cristo',
 			author: 'Alexandre Dumas',
 			coverUrl: '/books/the-count-of-monte-cristo-200.webp'
-		},
+		}
+	],
+	finished: [
 		{
 			title: 'Stoner',
 			author: 'John Williams',
@@ -57,7 +60,7 @@ export const readingList: ReadingList = {
 	]
 };
 
-/** The book being read now comes first, then finished books in listed order. */
+/** Books being read now come first, then finished books in listed order. */
 export function recentBooks(list: ReadingList): Book[] {
-	return [list.current, ...list.finished];
+	return [...list.current, ...list.finished];
 }

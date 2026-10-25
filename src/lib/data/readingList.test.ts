@@ -6,12 +6,12 @@ function bookTitled(title: string): Book {
 }
 
 describe('recent books order', () => {
-	test('shows the book being read first, then finished books in their listed order', () => {
+	test('shows the books being read first, then finished books in their listed order', () => {
 		const list: ReadingList = {
-			current: bookTitled('Now'),
+			current: [bookTitled('Now'), bookTitled('Also now')],
 			finished: [bookTitled('First'), bookTitled('Second')]
 		};
 
-		expect(recentBooks(list).map((book) => book.title)).toEqual(['Now', 'First', 'Second']);
+		expect(recentBooks(list).map((book) => book.title)).toEqual(['Now', 'Also now', 'First', 'Second']);
 	});
 });

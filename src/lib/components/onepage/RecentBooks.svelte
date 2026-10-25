@@ -15,7 +15,7 @@
 	const books = recentBooks(readingList);
 
 	function isBeingRead(book: Book) {
-		return book === readingList.current;
+		return readingList.current.includes(book);
 	}
 </script>
 
